@@ -29,7 +29,14 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes."
         }
       ],
-      "expo-barcode-scanner"
+      "expo-barcode-scanner",
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ]
     ],
     "android": {
       "permissions": [

@@ -26,15 +26,15 @@ export default function RootLayout() {
         const inAuthGroup = segments[0] === '(auth)';
 
         if (!session && !inAuthGroup) {
-          // Redirect to sign-in if not authenticated
-          router.replace('/sign-in');
+          // Always show onboarding first when not authenticated
+          router.replace('/onboarding');
         } else if (session && inAuthGroup) {
           // Redirect to home if already authenticated
           router.replace('/(tabs)');
         }
       } catch (error) {
         console.error('Auth error:', error);
-        router.replace('/sign-in');
+        router.replace('/onboarding');
       }
     };
 
