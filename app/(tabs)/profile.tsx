@@ -6,6 +6,7 @@ import { getProfile, signOut } from '@/lib/auth';
 import { getProfileStats, ProfileStats } from '@/lib/profile';
 import { router } from 'expo-router';
 import { getUserRank, getPointsToNextRank, Rank } from '@/lib/ranks';
+import { getTransactionHistory, Transaction } from '@/lib/points';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
@@ -23,16 +24,23 @@ export default function ProfileScreen() {
     try {
       setError(null);
       setLoading(true);
-      const [profileData, statsData] = await Promise.all([
+      const [profileData, statsData, transactionsData] = await Promise.all([
         getProfile(),
         getProfileStats(),
+        getTransactionHistory(),
       ]);
+
+      // Calculate total earned points from transactions
+      const wholePoints = transactionsData
+        .filter((transaction: Transaction) => transaction.type === 'earn')
+        .reduce((sum: number, transaction: Transaction) => sum + transaction.amount, 0);
+
       setProfile(profileData);
       setStats(statsData);
 
-      // Calculate rank and next rank progress
-      const rank = getUserRank(profileData.points);
-      const pointsToNextRank = getPointsToNextRank(profileData.points);
+      // Calculate rank and next rank progress based on whole points
+      const rank = getUserRank(wholePoints);
+      const pointsToNextRank = getPointsToNextRank(wholePoints);
       setCurrentRank(rank);
       setPointsToNext(pointsToNextRank);
     } catch (err) {
