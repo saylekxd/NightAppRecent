@@ -66,7 +66,12 @@ export function CommunityPosts({
         </Pressable>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.postsScroll}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        style={styles.postsScroll}
+        contentContainerStyle={styles.postsScrollContainer}
+      >
         {posts.map((post) => (
           <View key={post.id} style={styles.postCard}>
             <View style={styles.postHeader}>
@@ -128,6 +133,7 @@ export function CommunityPosts({
 const styles = StyleSheet.create({
   section: {
     padding: 20,
+    
   },
   sectionTitle: {
     color: '#fff',
@@ -181,11 +187,15 @@ const styles = StyleSheet.create({
   },
   postsScroll: {
     marginRight: -20,
-    marginLeft: -10,
+    marginLeft: -20,
+    paddingLeft: 20,
+  },
+  postsScrollContainer: {
+    paddingRight: 20,
   },
   postCard: {
     width: 280,
-    marginHorizontal: 10,
+    marginRight: 15,
     backgroundColor: '#1a1a1a',
     borderRadius: 15,
     padding: 15,

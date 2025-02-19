@@ -46,17 +46,17 @@ export default function HomeScreen() {
         loadPosts(),
       ]);
 
-      const earnedPoints = activitiesData
+      const wholePoints = activitiesData
         .filter(activity => activity.type === 'earn')
         .reduce((sum, activity) => sum + activity.amount, 0);
 
-      setProfile({ ...profileData, earnedPoints });
+      setProfile({ ...profileData, points: wholePoints });
       setEvents(eventsData);
       setActivities(activitiesData);
       setPosts(postsData || []);
       
-      const rank = getUserRank(earnedPoints);
-      const pointsToNextRank = getPointsToNextRank(earnedPoints);
+      const rank = getUserRank(wholePoints);
+      const pointsToNextRank = getPointsToNextRank(wholePoints);
       setCurrentRank(rank);
       setPointsToNext(pointsToNextRank);
     } catch (err) {
@@ -185,47 +185,42 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView 
-      style={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor="#fff"
-          titleColor="#fff"
-        />
-      }
-    >
+    <View style={styles.container}>
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}
       />
-      
-      <Header 
-        fullName={profile?.full_name} 
-        username={profile?.username} 
-      />
-
-      <PointsCard 
-        points={profile?.earnedPoints || 0}
-        currentRank={currentRank}
-        pointsToNext={pointsToNext}
-        onRefresh={loadData}
-      />
-
-      <CommunityPosts 
-        posts={posts}
-        newPost={newPost}
-        posting={posting}
-        onNewPostChange={setNewPost}
-        onSubmitPost={handlePost}
-        onLike={handleLike}
-      />
-
-      <Events events={events} />
-
-      <Activities activities={activities} />
-    </ScrollView>
+      <Header fullName={profile?.full_name} username={profile?.username} />
+      <ScrollView
+        style={styles.scrollContent}
+        contentContainerStyle={styles.scrollContentContainer}
+        refreshControl={
+          <RefreshControl 
+            refreshing={refreshing} 
+            onRefresh={onRefresh}
+            tintColor="#fff"
+            titleColor="#fff"
+          />
+        }
+      >
+        <PointsCard
+          points={profile?.points || 0}
+          currentRank={currentRank}
+          pointsToNext={pointsToNext}
+          onRefresh={loadData}
+        />
+        <CommunityPosts
+          posts={posts}
+          newPost={newPost}
+          posting={posting}
+          onNewPostChange={setNewPost}
+          onSubmitPost={handlePost}
+          onLike={handleLike}
+        />
+        <Events events={events} />
+        <Activities activities={activities} />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -233,6 +228,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%',
+  },
+  scrollContent: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingBottom: 20,
   },
   loadingContainer: {
     flex: 1,
@@ -243,12 +251,5 @@ const styles = StyleSheet.create({
   loadingText: {
     color: '#fff',
     fontSize: 16,
-  },
-  background: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: '100%',
   },
 });

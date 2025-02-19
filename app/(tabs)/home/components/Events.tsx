@@ -9,7 +9,12 @@ export function Events({ events }: EventsProps) {
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Upcoming Events</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventsScroll}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        style={styles.eventsScroll}
+        contentContainerStyle={styles.eventsScrollContainer}
+      >
         {events.map((event) => (
           <View key={event.id} style={styles.eventCard}>
             <Image source={{ uri: event.image_url }} style={styles.eventImage} />
@@ -42,11 +47,15 @@ const styles = StyleSheet.create({
   },
   eventsScroll: {
     marginRight: -20,
-    marginLeft: -10,
+    marginLeft: -20,
+    paddingLeft: 20,
+  },
+  eventsScrollContainer: {
+    paddingRight: 20,
   },
   eventCard: {
     width: 280,
-    marginHorizontal: 10,
+    marginRight: 15,
     backgroundColor: '#1a1a1a',
     borderRadius: 15,
     overflow: 'hidden',
