@@ -87,7 +87,7 @@ export default function HomeScreen() {
 
     return data.map(post => ({
       ...post,
-      user: post.user || { full_name: 'Unknown User', avatar_url: null },
+      user: post.user || { full_name: 'Anonymous', avatar_url: null },
       likes_count: post.likes?.length || 0,
       has_liked: post.likes?.some((like: any) => like.user_id === user.id) || false,
     }));
@@ -451,7 +451,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   eventsScroll: {
-    marginHorizontal: -20,
+    marginRight: -20,
+    marginLeft: -10,
   },
   eventCard: {
     width: 280,
