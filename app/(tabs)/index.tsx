@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, Image, ScrollView, Pressable, RefreshControl, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, useCallback } from 'react';
 import { getProfile } from '@/lib/auth';
 import { getUpcomingEvents, Event } from '@/lib/events';
 import { getTransactionHistory, Transaction } from '@/lib/points';
 import { supabase } from '@/lib/supabase';
-import { getUserRank, getPointsToNextRank, Rank } from '@/lib/ranks';
+import { getUserRank, getPointsToNextRank, Rank, ranks } from '@/lib/ranks';
+import { Header, PointsCard, CommunityPosts, Events, Activities } from './home/components';
 
 interface CommunityPost {
   id: string;
@@ -16,6 +16,7 @@ interface CommunityPost {
   user: {
     full_name: string;
     avatar_url: string | null;
+    rank: Rank;
   };
   created_at: string;
   likes_count: number;
@@ -45,7 +46,6 @@ export default function HomeScreen() {
         loadPosts(),
       ]);
 
-      // Calculate total earned points from activities
       const earnedPoints = activitiesData
         .filter(activity => activity.type === 'earn')
         .reduce((sum, activity) => sum + activity.amount, 0);
@@ -55,7 +55,6 @@ export default function HomeScreen() {
       setActivities(activitiesData);
       setPosts(postsData || []);
       
-      // Calculate rank based on earned points instead of profile.points
       const rank = getUserRank(earnedPoints);
       const pointsToNextRank = getPointsToNextRank(earnedPoints);
       setCurrentRank(rank);
@@ -72,22 +71,49 @@ export default function HomeScreen() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
-    const { data, error } = await supabase
+    // First get the posts
+    const { data: postsData, error: postsError } = await supabase
       .from('community_posts')
       .select(`
         *,
-        user:profiles(full_name, avatar_url),
+        user:profiles(id, full_name, avatar_url),
         likes:community_post_likes(user_id)
       `)
       .eq('status', 'approved')
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (error) throw error;
+    if (postsError) throw postsError;
 
-    return data.map(post => ({
+    // Get transactions for all users who made posts
+    const userIds = postsData
+      .filter(post => post.user)
+      .map(post => post.user.id);
+
+    const { data: transactionsData, error: transactionsError } = await supabase
+      .from('transactions')
+      .select('*')
+      .in('user_id', userIds)
+      .eq('type', 'earn');
+
+    if (transactionsError) throw transactionsError;
+
+    // Calculate total points for each user
+    const userPoints = transactionsData.reduce((acc: { [key: string]: number }, transaction) => {
+      acc[transaction.user_id] = (acc[transaction.user_id] || 0) + transaction.amount;
+      return acc;
+    }, {});
+
+    return postsData.map(post => ({
       ...post,
-      user: post.user || { full_name: 'Anonymous', avatar_url: null },
+      user: post.user ? {
+        ...post.user,
+        rank: getUserRank(userPoints[post.user.id] || 0)
+      } : { 
+        full_name: 'Anonymous', 
+        avatar_url: null,
+        rank: ranks[0] // Bronze rank for anonymous users
+      },
       likes_count: post.likes?.length || 0,
       has_liked: post.likes?.some((like: any) => like.user_id === user.id) || false,
     }));
@@ -103,13 +129,12 @@ export default function HomeScreen() {
         .insert({
           content: newPost.trim(),
           user_id: profile.id,
-          status: 'pending' // Posts start as pending
+          status: 'pending'
         });
 
       if (error) throw error;
 
       setNewPost('');
-      // Show feedback that post is pending approval
       alert('Your post has been submitted for approval');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create post');
@@ -176,172 +201,30 @@ export default function HomeScreen() {
         style={styles.background}
       />
       
-      <View style={styles.header}>
-        <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800' }}
-          style={styles.headerImage}
-        />
-        <View style={styles.overlay} />
-        <View style={styles.headerContent}>
-          <Text style={styles.welcomeText}>Welcome back,</Text>
-          <Text style={styles.nameText}>{profile?.full_name || profile?.username}</Text>
-        </View>
-      </View>
+      <Header 
+        fullName={profile?.full_name} 
+        username={profile?.username} 
+      />
 
-      <View style={styles.pointsCard}>
-        <View style={styles.pointsHeader}>
-          <View>
-            <Text style={styles.pointsLabel}>Whole Points</Text>
-            <Text style={styles.pointsValue}>{profile?.earnedPoints || 0}</Text>
-          </View>
-          <Pressable 
-            style={styles.refreshButton}
-            onPress={loadData}
-          >
-            <Ionicons name="refresh" size={24} color="#ff3b7f" />
-          </Pressable>
-        </View>
-        <View style={styles.tierInfo}>
-          <Ionicons 
-            name={currentRank?.icon || "star"} 
-            size={20} 
-            color={currentRank?.color || "#ff3b7f"} 
-          />
-          <Text style={[styles.tierText, { color: currentRank?.color || "#ff3b7f" }]}>
-            {currentRank?.name || 'Bronze'} Member
-          </Text>
-        </View >
-        {pointsToNext > 0 && (
-          <Text style={styles.nextRankText}>
-            {pointsToNext} points until next rank
-          </Text>
-        )}
-      </View>
+      <PointsCard 
+        points={profile?.earnedPoints || 0}
+        currentRank={currentRank}
+        pointsToNext={pointsToNext}
+        onRefresh={loadData}
+      />
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Community Spotlight</Text>
-        <View style={styles.postInput}>
-          <TextInput
-            style={styles.input}
-            placeholder="Share something with the community..."
-            placeholderTextColor="#666"
-            value={newPost}
-            onChangeText={(text) => {
-              if (text.length <= 100) {
-                setNewPost(text);
-              }
-            }}
-            maxLength={100}
-            multiline
-            numberOfLines={3}
-          />
-          <View style={styles.inputFooter}>
-            <Text style={styles.disclaimer}>
-              Note: Posts will be reviewed before appearing in the community feed.
-            </Text>
-            <Text style={styles.characterCount}>
-              {newPost.length}/100
-            </Text>
-          </View>
-          <Pressable
-            style={[styles.postButton, (!newPost.trim() || posting) && styles.postButtonDisabled]}
-            onPress={handlePost}
-            disabled={!newPost.trim() || posting}>
-            <Text style={styles.postButtonText}>
-              {posting ? 'Submitting...' : 'Submit for Review'}
-            </Text>
-          </Pressable>
-        </View>
+      <CommunityPosts 
+        posts={posts}
+        newPost={newPost}
+        posting={posting}
+        onNewPostChange={setNewPost}
+        onSubmitPost={handlePost}
+        onLike={handleLike}
+      />
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventsScroll}>
-          {posts.map((post) => (
-            <View key={post.id} style={styles.postCard}>
-              <View style={styles.postHeader}>
-                <Image
-                  source={{
-                    uri: post.user?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800'
-                  }}
-                  style={styles.avatar}
-                />
-                <View style={styles.postHeaderText}>
-                  <Text style={styles.userName}>{post.user?.full_name}</Text>
-                  <Text style={styles.postTime}>
-                    {new Date(post.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </Text>
-                </View>
-              </View>
-              <Text style={styles.postContent}>{post.content}</Text>
-              <View style={styles.postActions}>
-                <Pressable
-                  style={styles.likeButton}
-                  onPress={() => handleLike(post.id, post.has_liked)}>
-                  <Ionicons
-                    name={post.has_liked ? 'heart' : 'heart-outline'}
-                    size={24}
-                    color={post.has_liked ? '#ff3b7f' : '#fff'}
-                  />
-                  <Text style={[
-                    styles.likeCount,
-                    post.has_liked && styles.likedCount
-                  ]}>
-                    {post.likes_count}
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+      <Events events={events} />
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Upcoming Events</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventsScroll}>
-          {events.map((event) => (
-            <View key={event.id} style={styles.eventCard}>
-              <Image source={{ uri: event.image_url }} style={styles.eventImage} />
-              <View style={styles.eventInfo}>
-                <Text style={styles.eventTitle}>{event.title}</Text>
-                <Text style={styles.eventDate}>
-                  {new Date(event.date).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recent Activity</Text>
-        {activities.slice(0, 5).map((activity) => (
-          <View key={activity.id} style={styles.activityItem}>
-            <View style={styles.activityInfo}>
-              <Text style={styles.activityAction}>{activity.description}</Text>
-              <Text style={styles.activityDate}>
-                {new Date(activity.created_at).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </Text>
-            </View>
-            <Text style={[
-              styles.activityPoints,
-              { color: activity.type === 'earn' ? '#4CAF50' : '#ff3b7f' }
-            ]}>
-              {activity.type === 'earn' ? '+' : '-'}{activity.amount}
-            </Text>
-          </View>
-        ))}
-      </View>
+      <Activities activities={activities} />
     </ScrollView>
   );
 }
@@ -367,242 +250,5 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: '100%',
-  },
-  header: {
-    height: 200,
-    position: 'relative',
-  },
-  headerImage: {
-    width: '100%',
-    height: '100%',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  headerContent: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-  },
-  welcomeText: {
-    color: '#fff',
-    fontSize: 16,
-    opacity: 0.8,
-  },
-  nameText: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  pointsCard: {
-    margin: 20,
-    padding: 20,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  pointsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  pointsLabel: {
-    color: '#fff',
-    opacity: 0.8,
-    fontSize: 16,
-  },
-  pointsValue: {
-    color: '#fff',
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginVertical: 5,
-  },
-  refreshButton: {
-    padding: 8,
-    backgroundColor: 'rgba(255, 59, 127, 0.1)',
-    borderRadius: 20,
-  },
-  tierInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  tierText: {
-    marginLeft: 5,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  nextRankText: {
-    color: '#fff',
-    opacity: 0.8,
-    fontSize: 14,
-    marginTop: 5,
-    textAlign: 'left',
-  },
-  section: {
-    padding: 20,
-  },
-  sectionTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  eventsScroll: {
-    marginRight: -20,
-    marginLeft: -10,
-  },
-  eventCard: {
-    width: 280,
-    marginHorizontal: 10,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 15,
-    overflow: 'hidden',
-  },
-  eventImage: {
-    width: '100%',
-    height: 150,
-  },
-  eventInfo: {
-    padding: 15,
-  },
-  eventTitle: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  eventDate: {
-    color: '#fff',
-    opacity: 0.8,
-    marginTop: 5,
-  },
-  postInput: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  input: {
-    color: '#fff',
-    fontSize: 16,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  inputFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 10,
-  },
-  disclaimer: {
-    color: '#666',
-    fontSize: 12,
-  },
-  characterCount: {
-    color: '#666',
-    fontSize: 12,
-  },
-  postButton: {
-    backgroundColor: '#ff3b7f',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  postButtonDisabled: {
-    opacity: 0.5,
-  },
-  postButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  postCard: {
-    width: 280,
-    marginHorizontal: 10,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  postHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  postHeaderText: {
-    flex: 1,
-  },
-  userName: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  postTime: {
-    color: '#666',
-    fontSize: 14,
-  },
-  postContent: {
-    color: '#fff',
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 15,
-  },
-  postActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    paddingTop: 15,
-  },
-  likeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  likeCount: {
-    color: '#fff',
-    marginLeft: 5,
-    fontSize: 16,
-  },
-  likedCount: {
-    color: '#ff3b7f',
-  },
-  activityItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
-  activityInfo: {
-    flex: 1,
-  },
-  activityAction: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  activityDate: {
-    color: '#fff',
-    opacity: 0.6,
-    fontSize: 14,
-    marginTop: 4,
-  },
-  activityPoints: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
