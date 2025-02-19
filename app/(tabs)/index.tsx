@@ -44,14 +44,20 @@ export default function HomeScreen() {
         getTransactionHistory(),
         loadPosts(),
       ]);
-      setProfile(profileData);
+
+      // Calculate total earned points from activities
+      const earnedPoints = activitiesData
+        .filter(activity => activity.type === 'earn')
+        .reduce((sum, activity) => sum + activity.amount, 0);
+
+      setProfile({ ...profileData, earnedPoints });
       setEvents(eventsData);
       setActivities(activitiesData);
       setPosts(postsData || []);
       
-      // Calculate rank and next rank progress
-      const rank = getUserRank(profileData.points);
-      const pointsToNextRank = getPointsToNextRank(profileData.points);
+      // Calculate rank based on earned points instead of profile.points
+      const rank = getUserRank(earnedPoints);
+      const pointsToNextRank = getPointsToNextRank(earnedPoints);
       setCurrentRank(rank);
       setPointsToNext(pointsToNextRank);
     } catch (err) {
@@ -185,8 +191,8 @@ export default function HomeScreen() {
       <View style={styles.pointsCard}>
         <View style={styles.pointsHeader}>
           <View>
-            <Text style={styles.pointsLabel}>Current Points</Text>
-            <Text style={styles.pointsValue}>{profile?.points || 0}</Text>
+            <Text style={styles.pointsLabel}>Whole Points</Text>
+            <Text style={styles.pointsValue}>{profile?.earnedPoints || 0}</Text>
           </View>
           <Pressable 
             style={styles.refreshButton}
@@ -204,7 +210,7 @@ export default function HomeScreen() {
           <Text style={[styles.tierText, { color: currentRank?.color || "#ff3b7f" }]}>
             {currentRank?.name || 'Bronze'} Member
           </Text>
-        </View>
+        </View >
         {pointsToNext > 0 && (
           <Text style={styles.nextRankText}>
             {pointsToNext} points until next rank
@@ -433,7 +439,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     fontSize: 14,
     marginTop: 5,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   section: {
     padding: 20,
