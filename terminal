@@ -1,0 +1,9 @@
+npx expo install --dev 
+npx expo start --dev-client 
+npx expo run:android 
+npx expo run:ios --no-build-cache 
+rm -rf ios/build Pods Podfile.lock
+npx expo prebuild --clean 
+cd ios && pod install --clean-install && cd .. 
+xcodebuild clean -workspace ios/nightApp.xcworkspace -scheme nightApp
+rm -rf ~/Library/Developer/Xcode/DerivedData/* 
