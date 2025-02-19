@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Dimensions, ScrollView, Pressable } from 'react
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { getActiveQRCode, getPointsBalance, QRCode as QRCodeType } from '@/lib/points';
+import { getActiveQRCode, QRCode as QRCodeType } from '@/lib/points';
 import { Ionicons } from '@expo/vector-icons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -10,7 +10,6 @@ const QR_SIZE = SCREEN_WIDTH * 0.6;
 
 export default function QRCodeScreen() {
   const [qrCode, setQrCode] = useState<QRCodeType | null>(null);
-  const [points, setPoints] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,12 +21,8 @@ export default function QRCodeScreen() {
     try {
       setError(null);
       setLoading(true);
-      const [qrCodeData, pointsBalance] = await Promise.all([
-        getActiveQRCode(),
-        getPointsBalance(),
-      ]);
+      const qrCodeData = await getActiveQRCode();
       setQrCode(qrCodeData);
-      setPoints(pointsBalance);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -51,13 +46,7 @@ export default function QRCodeScreen() {
       />
       
       <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Your Entry Pass</Text>
-          <View style={styles.pointsContainer}>
-            <Ionicons name="star" size={20} color="#ff3b7f" />
-            <Text style={styles.pointsText}>{points} points</Text>
-          </View>
-        </View>
+        
 
         {error ? (
           <View style={styles.errorContainer}>
@@ -153,18 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-  },
-  pointsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1a1a1a',
-    padding: 10,
-    borderRadius: 20,
-  },
-  pointsText: {
-    color: '#ff3b7f',
-    marginLeft: 5,
-    fontWeight: '600',
   },
   subtitle: {
     fontSize: 16,

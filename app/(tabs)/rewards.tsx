@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, Modal } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, Modal, Animated, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
 import { getPointsBalance } from '@/lib/points';
 import { Reward, RewardRedemption, getAvailableRewards, redeemReward, getUserRedemptions } from '@/lib/rewards';
 import QRCode from 'react-native-qrcode-svg';
@@ -16,15 +16,28 @@ export default function RewardsScreen() {
   const [showRedemptionModal, setShowRedemptionModal] = useState(false);
   const [redeeming, setRedeeming] = useState(false);
   const [redemptionResult, setRedemptionResult] = useState<(RewardRedemption & { reward: Reward }) | null>(null);
+  const [showUsedCoupons, setShowUsedCoupons] = useState(false);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     loadData();
   }, []);
 
+  const startRotation = () => {
+    rotateAnim.setValue(0);
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const loadData = async () => {
     try {
       setError(null);
       setLoading(true);
+      startRotation();
       const [pointsData, rewardsData, redemptionsData] = await Promise.all([
         getPointsBalance(),
         getAvailableRewards(),
@@ -39,6 +52,11 @@ export default function RewardsScreen() {
       setLoading(false);
     }
   };
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const handleRedeem = async (reward: Reward) => {
     try {
@@ -66,13 +84,8 @@ export default function RewardsScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
-  }
+  const activeRedemptions = redemptions.filter(r => r.status === 'active' && new Date(r.expires_at) > new Date());
+  const usedRedemptions = redemptions.filter(r => r.status === 'used' || r.status === 'expired' || new Date(r.expires_at) <= new Date());
 
   return (
     <ScrollView style={styles.container}>
@@ -83,9 +96,19 @@ export default function RewardsScreen() {
       
       <View style={styles.header}>
         <Text style={styles.title}>Rewards</Text>
-        <View style={styles.pointsInfo}>
-          <Ionicons name="star" size={20} color="#ff3b7f" />
-          <Text style={styles.pointsText}>{points} points</Text>
+        <View style={styles.headerActions}>
+          <View style={styles.pointsInfo}>
+            <Ionicons name="star" size={20} color="#ff3b7f" />
+            <Text style={styles.pointsText}>{points} points</Text>
+          </View>
+          <Pressable 
+            style={[styles.refreshButton, loading && styles.refreshButtonLoading]}
+            onPress={loadData}
+            disabled={loading}>
+            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+              <Ionicons name="refresh" size={20} color="#fff" />
+            </Animated.View>
+          </Pressable>
         </View>
       </View>
 
@@ -98,7 +121,7 @@ export default function RewardsScreen() {
         </View>
       )}
 
-      <View style={styles.section}>
+      <View style={[styles.section, loading && styles.sectionLoading]}>
         <Text style={styles.sectionTitle}>Available Rewards</Text>
         {rewards.map((reward) => {
           const hasActiveRedemption = redemptions.some(
@@ -138,33 +161,74 @@ export default function RewardsScreen() {
         })}
       </View>
 
-      {redemptions.length > 0 && (
+      {activeRedemptions.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Rewards</Text>
-          {redemptions.map((redemption) => (
+          <Text style={styles.sectionTitle}>Active Coupons</Text>
+          {activeRedemptions.map((redemption) => (
             <View key={redemption.id} style={styles.redemptionCard}>
               <Image source={{ uri: redemption.reward.image_url }} style={styles.redemptionImage} />
               <View style={styles.redemptionInfo}>
-                <Text style={styles.redemptionTitle}>{redemption.reward.title}</Text>
+                <View>
+                  <Text style={styles.redemptionTitle}>{redemption.reward.title}</Text>
+                  <View style={styles.redemptionStatus}>
+                    <View style={[styles.statusBadge, styles.statusActive]}>
+                      <Text style={styles.statusText}>Active</Text>
+                    </View>
+                    <Text style={styles.expiryText}>
+                      Expires: {new Date(redemption.expires_at).toLocaleDateString()}
+                    </Text>
+                  </View>
+                </View>
+                <Pressable 
+                  style={styles.viewCodeButton}
+                  onPress={() => {
+                    setRedemptionResult(redemption);
+                    setShowRedemptionModal(true);
+                  }}>
+                  <Text style={styles.viewCodeButtonText}>View Code</Text>
+                </Pressable>
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {usedRedemptions.length > 0 && (
+        <View style={styles.section}>
+          <Pressable 
+            style={styles.usedCouponsHeader}
+            onPress={() => setShowUsedCoupons(!showUsedCoupons)}>
+            <Text style={styles.sectionTitle}>Past Coupons</Text>
+            <Ionicons 
+              name={showUsedCoupons ? 'chevron-up' : 'chevron-down'} 
+              size={24} 
+              color="#fff" 
+            />
+          </Pressable>
+          
+          {showUsedCoupons && usedRedemptions.map((redemption) => (
+            <View key={redemption.id} style={[styles.redemptionCard, styles.usedRedemptionCard]}>
+              <Image 
+                source={{ uri: redemption.reward.image_url }} 
+                style={[styles.redemptionImage, styles.usedRedemptionImage]} 
+              />
+              <View style={styles.redemptionInfo}>
+                <Text style={[styles.redemptionTitle, styles.usedRedemptionTitle]}>
+                  {redemption.reward.title}
+                </Text>
                 <View style={styles.redemptionStatus}>
                   <View style={[
                     styles.statusBadge,
-                    redemption.status === 'active' && styles.statusActive,
-                    redemption.status === 'used' && styles.statusUsed,
-                    redemption.status === 'expired' && styles.statusExpired,
+                    redemption.status === 'used' ? styles.statusUsed : styles.statusExpired
                   ]}>
-                    <Text style={styles.statusText}>{redemption.status}</Text>
+                    <Text style={styles.statusText}>
+                      {redemption.status === 'used' ? 'Used' : 'Expired'}
+                    </Text>
                   </View>
                   <Text style={styles.expiryText}>
-                    Expires: {new Date(redemption.expires_at).toLocaleDateString()}
+                    {new Date(redemption.expires_at).toLocaleDateString()}
                   </Text>
                 </View>
-                {redemption.status === 'active' && (
-                  <View style={styles.redemptionCode}>
-                    <Text style={styles.codeLabel}>Redemption Code:</Text>
-                    <Text style={styles.codeText}>{redemption.code}</Text>
-                  </View>
-                )}
               </View>
             </View>
           ))}
@@ -228,6 +292,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -257,31 +326,38 @@ const styles = StyleSheet.create({
   rewardCard: {
     backgroundColor: '#1a1a1a',
     borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 15,
     overflow: 'hidden',
+    flexDirection: 'row',
+    height: 160,
   },
   rewardImage: {
-    width: '100%',
-    height: 200,
+    width: 120,
+    height: '100%',
   },
   rewardInfo: {
-    padding: 20,
+    flex: 1,
+    padding: 12,
+    justifyContent: 'space-between',
   },
   rewardTitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 5,
+    marginBottom: 4,
   },
   rewardDescription: {
     color: '#fff',
     opacity: 0.8,
-    marginBottom: 15,
+    marginBottom: 4,
+    fontSize: 13,
+    lineHeight: 16,
+    maxHeight: 48,
   },
   rewardPoints: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 8,
   },
   pointsRequired: {
     color: '#ff3b7f',
@@ -290,8 +366,8 @@ const styles = StyleSheet.create({
   },
   redeemButton: {
     backgroundColor: '#ff3b7f',
-    padding: 15,
-    borderRadius: 10,
+    padding: 10,
+    borderRadius: 8,
     alignItems: 'center',
   },
   redeemButtonDisabled: {
@@ -300,32 +376,36 @@ const styles = StyleSheet.create({
   redeemButtonText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 14,
   },
   redemptionCard: {
     backgroundColor: '#1a1a1a',
     borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 15,
     overflow: 'hidden',
-  },
-  redemptionImage: {
-    width: '100%',
+    flexDirection: 'row',
     height: 120,
   },
+  redemptionImage: {
+    width: 100,
+    height: '100%',
+  },
   redemptionInfo: {
-    padding: 20,
+    flex: 1,
+    padding: 12,
+    justifyContent: 'space-between',
   },
   redemptionTitle: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 10,
+    marginBottom: 4,
   },
   redemptionStatus: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   statusBadge: {
     paddingHorizontal: 10,
@@ -351,23 +431,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.8,
     fontSize: 12,
-  },
-  redemptionCode: {
-    backgroundColor: '#000',
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  codeLabel: {
-    color: '#fff',
-    opacity: 0.8,
-    marginBottom: 5,
-  },
-  codeText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,
@@ -420,16 +483,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
-  },
   errorContainer: {
     margin: 20,
     padding: 20,
@@ -451,5 +504,65 @@ const styles = StyleSheet.create({
   retryButtonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  usedCouponsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  viewCodeButton: {
+    backgroundColor: '#ff3b7f',
+    padding: 8,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  viewCodeButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  usedRedemptionCard: {
+    opacity: 0.7,
+  },
+  usedRedemptionImage: {
+    opacity: 0.5,
+  },
+  usedRedemptionTitle: {
+    opacity: 0.8,
+  },
+  redemptionCode: {
+    backgroundColor: '#000',
+    padding: 12,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  codeLabel: {
+    color: '#fff',
+    opacity: 0.8,
+    marginBottom: 8,
+    fontSize: 14,
+  },
+  codeText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textAlign: 'center',
+  },
+  refreshButton: {
+    backgroundColor: '#1a1a1a',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  refreshButtonLoading: {
+    backgroundColor: '#2a2a2a',
+  },
+  sectionLoading: {
+    opacity: 0.7,
   },
 });

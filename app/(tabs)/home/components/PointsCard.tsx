@@ -1,17 +1,39 @@
-import { View, Text, StyleSheet, Pressable, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Modal, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Rank, ranks } from '@/lib/ranks';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface PointsCardProps {
   points: number;
   currentRank: Rank | null;
   pointsToNext: number;
   onRefresh: () => void;
+  isLoading?: boolean;
 }
 
-export function PointsCard({ points, currentRank, pointsToNext, onRefresh }: PointsCardProps) {
+export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoading }: PointsCardProps) {
   const [showRanksModal, setShowRanksModal] = useState(false);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+
+  const startRotation = () => {
+    rotateAnim.setValue(0);
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleRefresh = () => {
+    startRotation();
+    onRefresh();
+  };
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const rankDescriptions: { [key: string]: string } = {
     Bronze: "Starter rank for new members.",
@@ -22,17 +44,20 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh }: Poi
   };
 
   return (
-    <View style={styles.pointsCard}>
+    <View style={[styles.pointsCard, isLoading && styles.pointsCardLoading]}>
       <View style={styles.pointsHeader}>
         <View>
           <Text style={styles.pointsLabel}>Whole Points</Text>
           <Text style={styles.pointsValue}>{points || 0}</Text>
         </View>
         <Pressable 
-          style={styles.refreshButton}
-          onPress={onRefresh}
+          style={[styles.refreshButton, isLoading && styles.refreshButtonLoading]}
+          onPress={handleRefresh}
+          disabled={isLoading}
         >
-          <Ionicons name="refresh" size={24} color="#ff3b7f" />
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <Ionicons name="refresh" size={24} color="#ff3b7f" />
+          </Animated.View>
         </Pressable>
       </View>
       <Pressable 
@@ -136,6 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 59, 127, 0.1)',
     borderRadius: 20,
   },
+  refreshButtonLoading: {
+    backgroundColor: 'rgba(255, 59, 127, 0.2)',
+  },
   tierInfo: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -226,5 +254,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 10,
+  },
+  pointsCardLoading: {
+    opacity: 0.7,
   },
 }); 
