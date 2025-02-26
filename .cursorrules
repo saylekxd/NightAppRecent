@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "name": "Expo React Native Project Rules",
+      "description": "Rules for Expo React Native development",
+      "include": ["**/*.{js,jsx,ts,tsx}"],
+      "exclude": ["node_modules/**", ".expo/**", "ios/**", "android/**"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        }
+      }
+    },
+    {
+      "name": "TypeScript Rules",
+      "description": "TypeScript specific rules",
+      "include": ["**/*.{ts,tsx}"],
+      "exclude": ["node_modules/**"],
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "typescript.preferences.importModuleSpecifier": "relative"
+      }
+    },
+    {
+      "name": "JSON Rules",
+      "description": "Rules for JSON files",
+      "include": ["**/*.json"],
+      "exclude": ["node_modules/**"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    },
+    {
+      "name": "Expo Config Rules",
+      "description": "Rules for Expo configuration files",
+      "include": ["app.json", "app.config.js", "app.config.ts"],
+      "settings": {
+        "editor.formatOnSave": true
+      }
+    },
+    {
+      "name": "Tailwind Rules",
+      "description": "Rules for Tailwind CSS files",
+      "include": ["**/*.{css,scss}"],
+      "exclude": ["node_modules/**"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    },
+    {
+      "name": "Markdown Rules",
+      "description": "Rules for Markdown files",
+      "include": ["**/*.md"],
+      "exclude": ["node_modules/**"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.wordWrap": "on"
+      }
+    }
+  ],
+  "search": {
+    "exclude": [
+      "node_modules/**",
+      ".git/**",
+      ".expo/**",
+      "ios/**",
+      "android/**",
+      "build/**",
+      "dist/**",
+      ".expo-shared/**"
+    ]
+  },
+  "commands": [
+    {
+      "name": "Start Expo",
+      "command": "npx expo start",
+      "description": "Start Expo development server"
+    },
+    {
+      "name": "Start Expo (Clear Cache)",
+      "command": "npx expo start --clear",
+      "description": "Start Expo development server with cleared cache"
+    },
+    {
+      "name": "Start Expo (Tunnel)",
+      "command": "npx expo start --tunnel",
+      "description": "Start Expo development server with tunnel"
+    },
+    {
+      "name": "Start Expo (Web)",
+      "command": "npx expo start --web",
+      "description": "Start Expo development server for web"
+    },
+    {
+      "name": "Prebuild",
+      "command": "npx expo prebuild",
+      "description": "Generate native code for the project"
+    },
+    {
+      "name": "Install Dependencies",
+      "command": "npm install",
+      "description": "Install project dependencies"
+    },
+    {
+      "name": "Install Expo Package",
+      "command": "npx expo install ${input:package}",
+      "description": "Install an Expo compatible package"
+    },
+    {
+      "name": "Run Expo Doctor",
+      "command": "npx expo-doctor",
+      "description": "Check for issues in the project"
+    },
+    {
+      "name": "Build for Android",
+      "command": "npx expo build:android",
+      "description": "Build the app for Android"
+    },
+    {
+      "name": "Build for iOS",
+      "command": "npx expo build:ios",
+      "description": "Build the app for iOS"
+    }
+  ],
+  "snippets": [
+    {
+      "name": "React Native Component",
+      "description": "Create a new React Native functional component",
+      "scope": "typescript,typescriptreact",
+      "prefix": "rnfc",
+      "body": [
+        "import React from 'react';",
+        "import { View, Text, StyleSheet } from 'react-native';",
+        "",
+        "interface ${1:ComponentName}Props {",
+        "  ${2:prop}: ${3:type};",
+        "}",
+        "",
+        "export const ${1:ComponentName} = ({ ${2:prop} }: ${1:ComponentName}Props) => {",
+        "  return (",
+        "    <View style={styles.container}>",
+        "      <Text>${1:ComponentName}</Text>",
+        "      $0",
+        "    </View>",
+        "  );",
+        "};",
+        "",
+        "const styles = StyleSheet.create({",
+        "  container: {",
+        "    flex: 1,",
+        "    justifyContent: 'center',",
+        "    alignItems: 'center',",
+        "  },",
+        "});"
+      ]
+    },
+    {
+      "name": "React Native Screen",
+      "description": "Create a new React Native screen component",
+      "scope": "typescript,typescriptreact",
+      "prefix": "rnscreen",
+      "body": [
+        "import React from 'react';",
+        "import { View, Text, StyleSheet, SafeAreaView } from 'react-native';",
+        "",
+        "export const ${1:ScreenName}Screen = () => {",
+        "  return (",
+        "    <SafeAreaView style={styles.container}>",
+        "      <View style={styles.content}>",
+        "        <Text>${1:ScreenName}Screen</Text>",
+        "        $0",
+        "      </View>",
+        "    </SafeAreaView>",
+        "  );",
+        "};",
+        "",
+        "const styles = StyleSheet.create({",
+        "  container: {",
+        "    flex: 1,",
+        "  },",
+        "  content: {",
+        "    flex: 1,",
+        "    justifyContent: 'center',",
+        "    alignItems: 'center',",
+        "    padding: 16,",
+        "  },",
+        "});"
+      ]
+    },
+    {
+      "name": "useState Hook",
+      "description": "Add React useState hook",
+      "scope": "typescript,typescriptreact,javascript,javascriptreact",
+      "prefix": "usestate",
+      "body": [
+        "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:initialValue});"
+      ]
+    },
+    {
+      "name": "useEffect Hook",
+      "description": "Add React useEffect hook",
+      "scope": "typescript,typescriptreact,javascript,javascriptreact",
+      "prefix": "useeffect",
+      "body": [
+        "useEffect(() => {",
+        "  ${1:// Effect code}",
+        "  return () => {",
+        "    ${2:// Cleanup code}",
+        "  };",
+        "}, [${3:dependencies}]);"
+      ]
+    },
+    {
+      "name": "Expo Router Screen",
+      "description": "Create a new Expo Router screen",
+      "scope": "typescript,typescriptreact",
+      "prefix": "exposcreen",
+      "body": [
+        "import { View, Text, StyleSheet } from 'react-native';",
+        "import { Stack } from 'expo-router';",
+        "",
+        "export default function ${1:ScreenName}() {",
+        "  return (",
+        "    <View style={styles.container}>",
+        "      <Stack.Screen options={{ title: '${1:ScreenName}' }} />",
+        "      <Text>${1:ScreenName}</Text>",
+        "      $0",
+        "    </View>",
+        "  );",
+        "}",
+        "",
+        "const styles = StyleSheet.create({",
+        "  container: {",
+        "    flex: 1,",
+        "    justifyContent: 'center',",
+        "    alignItems: 'center',",
+        "    padding: 16,",
+        "  },",
+        "});"
+      ]
+    }
+  ]
+} 

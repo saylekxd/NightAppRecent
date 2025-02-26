@@ -36,7 +36,8 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "android": {
       "permissions": [

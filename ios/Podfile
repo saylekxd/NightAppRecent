@@ -62,23 +62,5 @@ target 'boltexponativewind' do
         end
       end
     end
-
-    installer.pods_project.targets.each do |target|
-      if target.name == 'hermes-engine'
-        target.build_phases.each do |build_phase|
-          if build_phase.display_name == '[CP-User] [Hermes] Replace Hermes for the right configuration, if needed'
-            build_phase.output_paths = ['${PODS_ROOT}/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework']
-          end
-        end
-      end
-      
-      if target.name == 'React-Fabric' || target.name == 'React-FabricComponents'
-        target.build_phases.each do |build_phase|
-          if build_phase.display_name == '[CP-User] [RN]Check rncore'
-            build_phase.output_paths = ['${PODS_ROOT}/React-Core/react-version-DUMMY.txt']
-          end
-        end
-      end
-    end
   end
 end

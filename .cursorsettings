@@ -1,0 +1,136 @@
+{
+  "editor": {
+    "formatOnSave": true,
+    "tabSize": 2,
+    "insertSpaces": true,
+    "detectIndentation": false,
+    "defaultFormatter": "esbenp.prettier-vscode",
+    "codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "wordWrap": "off",
+    "rulers": [100],
+    "bracketPairColorization.enabled": true,
+    "guides.bracketPairs": true,
+    "minimap.enabled": true,
+    "scrollBeyondLastLine": false,
+    "smoothScrolling": true,
+    "cursorBlinking": "smooth",
+    "cursorSmoothCaretAnimation": true,
+    "renderWhitespace": "boundary",
+    "suggestSelection": "first",
+    "quickSuggestions": {
+      "strings": true
+    },
+    "acceptSuggestionOnCommitCharacter": true,
+    "acceptSuggestionOnEnter": "on"
+  },
+  "files": {
+    "exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/.expo": true,
+      "**/ios/build": true,
+      "**/android/build": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.expo-shared": true
+    },
+    "watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true,
+      "**/.expo/**": true,
+      "**/ios/build/**": true,
+      "**/android/build/**": true
+    },
+    "associations": {
+      "*.jsx": "javascriptreact",
+      "*.tsx": "typescriptreact",
+      "*.js": "javascript",
+      "*.ts": "typescript",
+      "*.json": "json"
+    },
+    "autoSave": "onFocusChange"
+  },
+  "terminal": {
+    "integrated": {
+      "shell": {
+        "osx": "/bin/zsh",
+        "linux": "/bin/bash",
+        "windows": "cmd.exe"
+      },
+      "scrollback": 5000,
+      "fontSize": 12,
+      "fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+      "cursorBlinking": true,
+      "cursorStyle": "line"
+    }
+  },
+  "workbench": {
+    "colorTheme": "Default Dark+",
+    "iconTheme": "material-icon-theme",
+    "editor": {
+      "enablePreview": true,
+      "showTabs": true
+    },
+    "startupEditor": "welcomePage",
+    "tree": {
+      "indent": 16,
+      "renderIndentGuides": true
+    }
+  },
+  "javascript": {
+    "suggest": {
+      "completeFunctionCalls": true,
+      "enabled": true,
+      "includeAutomaticOptionalChainCompletions": true
+    },
+    "updateImportsOnFileMove.enabled": "always",
+    "preferences": {
+      "quoteStyle": "single",
+      "importModuleSpecifier": "relative"
+    }
+  },
+  "typescript": {
+    "suggest": {
+      "completeFunctionCalls": true,
+      "enabled": true,
+      "includeAutomaticOptionalChainCompletions": true
+    },
+    "updateImportsOnFileMove.enabled": "always",
+    "preferences": {
+      "quoteStyle": "single",
+      "importModuleSpecifier": "relative"
+    },
+    "tsdk": "node_modules/typescript/lib"
+  },
+  "emmet": {
+    "includeLanguages": {
+      "javascript": "javascriptreact",
+      "typescript": "typescriptreact"
+    },
+    "triggerExpansionOnTab": true
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "printWidth": 100,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": false,
+    "arrowParens": "avoid"
+  },
+  "eslint": {
+    "enable": true,
+    "run": "onSave",
+    "packageManager": "npm"
+  },
+  "git": {
+    "autofetch": true,
+    "confirmSync": false,
+    "enableSmartCommit": true
+  }
+} 
