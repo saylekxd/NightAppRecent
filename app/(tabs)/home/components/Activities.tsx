@@ -8,13 +8,13 @@ interface ActivitiesProps {
 export function Activities({ activities }: ActivitiesProps) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Recent Activity</Text>
+      <Text style={styles.sectionTitle}>Ostatnia Aktywność</Text>
       {activities.slice(0, 5).map((activity) => (
         <View key={activity.id} style={styles.activityItem}>
           <View style={styles.activityInfo}>
             <Text style={styles.activityAction}>{activity.description}</Text>
             <Text style={styles.activityDate}>
-              {new Date(activity.created_at).toLocaleDateString('en-US', {
+              {new Date(activity.created_at).toLocaleDateString('pl-PL', {
                 weekday: 'short',
                 month: 'short',
                 day: 'numeric',

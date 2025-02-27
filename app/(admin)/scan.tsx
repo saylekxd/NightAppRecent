@@ -46,14 +46,14 @@ const ScanScreen = () => {
           if (!permission?.granted) {
             const result = await requestPermission();
             if (mounted && !result.granted) {
-              setError('Camera permission was denied');
+              setError('Odmówiono dostępu do kamery');
             }
           }
         }
       } catch (err) {
         console.error('Scanner initialization error:', err);
         if (mounted) {
-          setError('Failed to initialize scanner');
+          setError('Nie udało się zainicjalizować skanera');
         }
       } finally {
         if (mounted) {
@@ -81,7 +81,7 @@ const ScanScreen = () => {
       setScannedCode(data);
       setShowActivitySelector(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to validate QR code');
+      setError(err instanceof Error ? err.message : 'Nie udało się zweryfikować kodu QR');
       setScanned(false);
     }
   };
@@ -95,7 +95,7 @@ const ScanScreen = () => {
       setResult(validationResult);
       setSelectedActivity(activity);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to validate QR code');
+      setError(err instanceof Error ? err.message : 'Nie udało się zweryfikować kodu QR');
       setScanned(false);
     }
   };
@@ -114,7 +114,7 @@ const ScanScreen = () => {
         router.back();
       }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to accept code');
+      setError(err instanceof Error ? err.message : 'Nie udało się zaakceptować kodu');
       setScanned(false); // Allow rescanning on error
     } finally {
       setAccepting(false);
@@ -147,7 +147,7 @@ const ScanScreen = () => {
           colors={['#1a1a1a', '#000']}
           style={StyleSheet.absoluteFill}
         />
-        <Text style={styles.text}>Initializing scanner...</Text>
+        <Text style={styles.text}>Inicjalizacja skanera...</Text>
       </View>
     );
   }
@@ -175,7 +175,7 @@ const ScanScreen = () => {
         <Pressable onPress={handleClose} style={styles.closeButton}>
           <Ionicons name="close" size={24} color="#fff" />
         </Pressable>
-        <Text style={styles.title}>Scan QR Code</Text>
+        <Text style={styles.title}>Skanuj Kod QR</Text>
       </View>
 
       {!scanned && (permission?.granted || Platform.OS === 'web') && (

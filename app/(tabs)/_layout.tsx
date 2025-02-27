@@ -21,13 +21,15 @@ export default function TabLayout() {
       setIsAdmin(profile.is_admin || false);
       
       // Check if we're in the admin section using segments
-      const isInAdminSection = segments.includes('admin');
+      const segmentsArray = segments as unknown as string[];
+      const isInAdminSection = segmentsArray.some(segment => segment === 'admin');
       if (!profile.is_admin && isInAdminSection) {
         router.replace('/(tabs)');
       }
     } catch (error) {
       setIsAdmin(false);
-      const isInAdminSection = segments.includes('admin');
+      const segmentsArray = segments as unknown as string[];
+      const isInAdminSection = segmentsArray.some(segment => segment === 'admin');
       if (isInAdminSection) {
         router.replace('/(tabs)');
       }
@@ -64,7 +66,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Strona Główna',
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -73,7 +75,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="rewards"
         options={{
-          title: 'Rewards',
+          title: 'Nagrody',
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="gift" size={size} color={color} />
           ),
@@ -82,7 +84,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="qr-code"
         options={{
-          title: 'My QR',
+          title: 'Mój QR',
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="qr-code" size={size} color={color} />
           ),
@@ -91,7 +93,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Profil',
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

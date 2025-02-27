@@ -40,25 +40,25 @@ const ScanResult = ({
             styles.resultTitle,
             { color: result.valid ? '#4CAF50' : '#F44336' }
           ]}>
-            {accepting ? 'Processing...' : result.valid ? 'Valid Code' : 'Invalid Code'}
+            {accepting ? 'Przetwarzanie...' : result.valid ? 'Kod Poprawny' : 'Kod Niepoprawny'}
           </Text>
         </View>
 
         {result.valid && result.data && (
           <View style={styles.resultInfo}>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>User:</Text>
+              <Text style={styles.infoLabel}>Użytkownik:</Text>
               <Text style={styles.infoValue}>{result.data.user.full_name}</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Current Points:</Text>
+              <Text style={styles.infoLabel}>Aktualne Punkty:</Text>
               <Text style={styles.infoValue}>{result.data.user.points}</Text>
             </View>
             
             {selectedActivity ? (
               <>
                 <View style={styles.activityContainer}>
-                  <Text style={styles.activityTitle}>Selected Activity</Text>
+                  <Text style={styles.activityTitle}>Wybrana Aktywność</Text>
                   <View style={styles.activityCard}>
                     <View>
                       <Text style={styles.activityName}>{selectedActivity.name}</Text>
@@ -79,7 +79,7 @@ const ScanResult = ({
                 onPress={onSelectActivity}
               >
                 <Ionicons name="add-circle-outline" size={24} color="#ff3b7f" />
-                <Text style={styles.selectActivityText}>Select Activity</Text>
+                <Text style={styles.selectActivityText}>Wybierz Aktywność</Text>
               </Pressable>
             )}
           </View>
@@ -90,7 +90,7 @@ const ScanResult = ({
             style={[styles.button, styles.secondaryButton]}
             onPress={onRetry}
             disabled={accepting}>
-            <Text style={styles.buttonText}>Scan Another</Text>
+            <Text style={styles.buttonText}>Skanuj Ponownie</Text>
           </Pressable>
           {result.valid && selectedActivity && (
             <Pressable
@@ -98,7 +98,7 @@ const ScanResult = ({
               onPress={onAccept}
               disabled={accepting}>
               <Text style={styles.buttonText}>
-                {accepting ? 'Processing...' : 'Accept'}
+                {accepting ? 'Przetwarzanie...' : 'Akceptuj'}
               </Text>
             </Pressable>
           )}

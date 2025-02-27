@@ -18,7 +18,7 @@ export default function ResetPasswordScreen() {
       await resetPassword(email);
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setIsLoading(false);
     }
@@ -32,9 +32,9 @@ export default function ResetPasswordScreen() {
       />
       
       <View style={styles.content}>
-        <Text style={styles.title}>Reset Password</Text>
+        <Text style={styles.title}>Resetowanie Hasła</Text>
         <Text style={styles.subtitle}>
-          Enter your email address and we'll send you instructions to reset your password.
+          Podaj swój adres email, a wyślemy Ci instrukcje resetowania hasła.
         </Text>
 
         {error && (
@@ -44,10 +44,10 @@ export default function ResetPasswordScreen() {
         {success ? (
           <View style={styles.successContainer}>
             <Text style={styles.successText}>
-              Check your email for password reset instructions.
+              Sprawdź swoją skrzynkę email, aby znaleźć instrukcje resetowania hasła.
             </Text>
             <Link href="/sign-in" style={styles.link}>
-              <Text style={styles.linkText}>Return to Sign In</Text>
+              <Text style={styles.linkText}>Wróć do logowania</Text>
             </Link>
           </View>
         ) : (
@@ -67,12 +67,12 @@ export default function ResetPasswordScreen() {
               onPress={handleResetPassword}
               disabled={isLoading}>
               <Text style={styles.buttonText}>
-                {isLoading ? 'Sending...' : 'Send Reset Instructions'}
+                {isLoading ? 'Wysyłanie...' : 'Wyślij instrukcje resetowania'}
               </Text>
             </Pressable>
 
             <Link href="/sign-in" style={styles.link}>
-              <Text style={styles.linkText}>Back to Sign In</Text>
+              <Text style={styles.linkText}>Powrót do logowania</Text>
             </Link>
           </>
         )}

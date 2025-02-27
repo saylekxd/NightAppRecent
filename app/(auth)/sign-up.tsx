@@ -22,7 +22,7 @@ export default function SignUpScreen() {
       await signUp(data);
       router.replace('/(tabs)');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setIsLoading(false);
     }
@@ -36,8 +36,8 @@ export default function SignUpScreen() {
       />
       
       <View style={styles.content}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join the club</Text>
+        <Text style={styles.title}>Utwórz Konto</Text>
+        <Text style={styles.subtitle}>Dołącz do klubu</Text>
 
         {error && (
           <Text style={styles.error}>{error}</Text>
@@ -45,7 +45,7 @@ export default function SignUpScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="Full Name"
+          placeholder="Imię i Nazwisko"
           placeholderTextColor="#666"
           value={fullName}
           onChangeText={setFullName}
@@ -63,7 +63,7 @@ export default function SignUpScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="Hasło"
           placeholderTextColor="#666"
           value={password}
           onChangeText={setPassword}
@@ -71,7 +71,7 @@ export default function SignUpScreen() {
         />
 
         <Text style={styles.passwordRequirements}>
-          Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.
+          Hasło musi zawierać co najmniej 8 znaków, w tym wielkie i małe litery, cyfry oraz znaki specjalne.
         </Text>
 
         <Pressable
@@ -79,14 +79,14 @@ export default function SignUpScreen() {
           onPress={handleSignUp}
           disabled={isLoading}>
           <Text style={styles.buttonText}>
-            {isLoading ? 'Creating account...' : 'Sign Up'}
+            {isLoading ? 'Tworzenie konta...' : 'Zarejestruj się'}
           </Text>
         </Pressable>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account?</Text>
+          <Text style={styles.footerText}>Masz już konto?</Text>
           <Link href="/sign-in" style={styles.link}>
-            <Text style={[styles.linkText, styles.signInText]}>Sign In</Text>
+            <Text style={[styles.linkText, styles.signInText]}>Zaloguj się</Text>
           </Link>
         </View>
       </View>

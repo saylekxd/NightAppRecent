@@ -8,7 +8,7 @@ export default function OnboardingScreen() {
   const videoSource: VideoSource = {
     uri: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/Nightzone.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvTmlnaHR6b25lLm1wNCIsImlhdCI6MTczOTk4MDkzOCwiZXhwIjoxODk3NjYwOTM4fQ.OvorkUsQtb1noHSDQ-OB-QGAluP5VjFtixcsvDrzGc4',
     metadata: {
-      title: 'Onboarding Video',
+      title: 'Film wprowadzający',
     }
   };
 
@@ -43,7 +43,7 @@ export default function OnboardingScreen() {
           <Pressable
             style={styles.button}
             onPress={handleGetStarted}>
-            <Text style={styles.buttonText}>Get Started</Text>
+            <Text style={styles.buttonText}>Rozpocznij</Text>
           </Pressable>
         </View>
       </View>

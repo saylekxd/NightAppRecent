@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,7 +45,7 @@ export default function ProfileScreen() {
       setCurrentRank(rank);
       setPointsToNext(pointsToNextRank);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setLoading(false);
     }
@@ -55,14 +56,14 @@ export default function ProfileScreen() {
       await signOut();
       router.replace('/sign-in');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     }
   };
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Ładowanie...</Text>
       </View>
     );
   }
@@ -94,12 +95,12 @@ export default function ProfileScreen() {
             color={currentRank?.color || "#CD7F32"} 
           />
           <Text style={[styles.membershipText, { color: currentRank?.color || "#CD7F32" }]}>
-            {currentRank?.name || 'Bronze'} Member
+            {currentRank?.name || 'Nowicjusz'}
           </Text>
         </View>
         {pointsToNext > 0 && (
           <Text style={styles.nextRankText}>
-            {pointsToNext} points until next rank
+            {pointsToNext} punktów do następnej rangi
           </Text>
         )}
       </View>
@@ -107,17 +108,17 @@ export default function ProfileScreen() {
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats?.points || 0}</Text>
-          <Text style={styles.statLabel}>Points</Text>
+          <Text style={styles.statLabel}>Punkty</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-          <Text style={styles.statLabel}>Visits</Text>
+          <Text style={styles.statLabel}>Wizyty</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats?.active_rewards_count || 0}</Text>
-          <Text style={styles.statLabel}>Active Rewards</Text>
+          <Text style={styles.statLabel}>Aktywne Nagrody</Text>
         </View>
       </View>
 
@@ -125,20 +126,20 @@ export default function ProfileScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={loadProfile}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
+            <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
           </Pressable>
         </View>
       )}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account Settings</Text>
+        <Text style={styles.sectionTitle}>Ustawienia Konta</Text>
         
         <Pressable
           style={styles.menuItem}
           onPress={() => router.push('/account/edit-profile')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="person-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Edit Profile</Text>
+            <Text style={styles.menuItemText}>Edytuj Profil</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -148,7 +149,17 @@ export default function ProfileScreen() {
           onPress={() => router.push('/account/notifications')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="notifications-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Notifications</Text>
+            <Text style={styles.menuItemText}>Powiadomienia</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#666" />
+        </Pressable>
+
+        <Pressable
+          style={styles.menuItem}
+          onPress={() => router.push('/account/notifications')}>
+          <View style={styles.menuItemLeft}>
+            <Ionicons name="settings-outline" size={24} color="#fff" />
+            <Text style={styles.menuItemText}>Preferencje</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -158,7 +169,21 @@ export default function ProfileScreen() {
           onPress={() => router.push('/account/privacy')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="shield-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Privacy & Security</Text>
+            <Text style={styles.menuItemText}>Prywatność i Bezpieczeństwo</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#666" />
+        </Pressable>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Pomoc i Informacje</Text>
+
+        <Pressable
+          style={styles.menuItem}
+          onPress={() => router.push('https://support.example.com')}>
+          <View style={styles.menuItemLeft}>
+            <Ionicons name="help-circle-outline" size={24} color="#fff" />
+            <Text style={styles.menuItemText}>Pomoc i Wsparcie</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -167,21 +192,28 @@ export default function ProfileScreen() {
           style={styles.menuItem}
           onPress={() => router.push('https://support.example.com')}>
           <View style={styles.menuItemLeft}>
-            <Ionicons name="help-circle-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Help & Support</Text>
+            <Ionicons name="information-circle-outline" size={24} color="#fff" />
+            <Text style={styles.menuItemText}>O Aplikacji</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
 
         <Pressable
           style={styles.menuItem}
-          onPress={handleSignOut}>
+          onPress={() => router.push('https://support.example.com')}>
           <View style={styles.menuItemLeft}>
-            <Ionicons name="log-out-outline" size={24} color="#ff3b7f" />
-            <Text style={[styles.menuItemText, styles.signOutText]}>Sign Out</Text>
+            <Ionicons name="chatbox-outline" size={24} color="#fff" />
+            <Text style={styles.menuItemText}>Prześlij Opinię</Text>
           </View>
+          <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
       </View>
+
+      <Pressable 
+        style={styles.signOutButton}
+        onPress={handleSignOut}>
+        <Text style={styles.signOutText}>Wyloguj się</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -191,16 +223,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
-  },
   background: {
     position: 'absolute',
     left: 0,
@@ -209,9 +231,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   header: {
-    alignItems: 'center',
     padding: 20,
     paddingTop: 60,
+    alignItems: 'center',
   },
   avatarContainer: {
     position: 'relative',
@@ -224,53 +246,53 @@ const styles = StyleSheet.create({
   },
   editAvatarButton: {
     position: 'absolute',
-    right: 0,
     bottom: 0,
+    right: 0,
     backgroundColor: '#ff3b7f',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#000',
   },
   name: {
+    color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 5,
   },
   membershipInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
   },
   membershipText: {
     marginLeft: 5,
+    fontSize: 16,
     fontWeight: '600',
+  },
+  nextRankText: {
+    color: '#fff',
+    opacity: 0.8,
+    fontSize: 14,
+    marginTop: 5,
   },
   statsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20,
+    justifyContent: 'space-around',
     backgroundColor: '#1a1a1a',
     margin: 20,
+    padding: 20,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: '#333',
   },
   statItem: {
-    flex: 1,
     alignItems: 'center',
   },
   statValue: {
+    color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 5,
   },
   statLabel: {
@@ -280,24 +302,23 @@ const styles = StyleSheet.create({
   statDivider: {
     width: 1,
     backgroundColor: '#333',
-    height: '100%',
   },
   section: {
     padding: 20,
   },
   sectionTitle: {
+    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 15,
   },
   menuItem: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 15,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
+    paddingVertical: 15,
   },
   menuItemLeft: {
     flexDirection: 'row',
@@ -308,20 +329,30 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 16,
   },
-  signOutText: {
-    color: '#ff3b7f',
-  },
-  errorContainer: {
-    margin: 20,
-    padding: 15,
-    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+  signOutButton: {
+    backgroundColor: '#ff3b7f',
+    marginHorizontal: 20,
+    marginBottom: 40,
+    padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
+  signOutText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  errorContainer: {
+    margin: 20,
+    padding: 20,
+    backgroundColor: 'rgba(255, 59, 127, 0.1)',
+    borderRadius: 15,
+    alignItems: 'center',
+  },
   errorText: {
-    color: '#F44336',
-    marginBottom: 10,
+    color: '#ff3b7f',
     textAlign: 'center',
+    marginBottom: 15,
   },
   retryButton: {
     backgroundColor: '#ff3b7f',
@@ -333,11 +364,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
-  nextRankText: {
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  loadingText: {
     color: '#fff',
-    opacity: 0.8,
-    fontSize: 14,
-    marginTop: 5,
-    textAlign: 'center',
+    fontSize: 16,
   },
 });

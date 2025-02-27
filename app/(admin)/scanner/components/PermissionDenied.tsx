@@ -8,16 +8,16 @@ const PermissionDenied = () => {
   return (
     <View style={styles.messageContainer}>
       <Ionicons name="warning" size={48} color="#ff3b7f" />
-      <Text style={styles.messageText}>Camera access is required to scan QR codes</Text>
+      <Text style={styles.messageText}>Dostęp do kamery jest wymagany do skanowania kodów QR</Text>
       <Pressable
         style={styles.button}
         onPress={() => Camera.requestCameraPermissionsAsync()}>
-        <Text style={styles.buttonText}>Grant Permission</Text>
+        <Text style={styles.buttonText}>Przyznaj Uprawnienia</Text>
       </Pressable>
       <Pressable
         style={[styles.button, styles.secondaryButton]}
         onPress={() => router.back()}>
-        <Text style={styles.buttonText}>Go Back</Text>
+        <Text style={styles.buttonText}>Wróć</Text>
       </Pressable>
     </View>
   );

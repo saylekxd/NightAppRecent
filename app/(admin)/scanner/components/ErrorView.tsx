@@ -14,7 +14,7 @@ const ErrorView = ({ message, onRetry }: ErrorViewProps) => {
         <Ionicons name="alert-circle" size={48} color="#F44336" />
         <Text style={styles.errorText}>{message}</Text>
         <Pressable style={styles.button} onPress={onRetry}>
-          <Text style={styles.buttonText}>Try Again</Text>
+          <Text style={styles.buttonText}>Spróbuj Ponownie</Text>
         </Pressable>
       </View>
     </View>

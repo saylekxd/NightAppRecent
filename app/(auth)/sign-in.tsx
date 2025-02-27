@@ -21,7 +21,7 @@ export default function SignInScreen() {
       await signIn(data);
       router.replace('/(tabs)');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setIsLoading(false);
     }
@@ -35,8 +35,8 @@ export default function SignInScreen() {
       />
       
       <View style={styles.content}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to continue</Text>
+        <Text style={styles.title}>Witaj Ponownie</Text>
+        <Text style={styles.subtitle}>Zaloguj się, aby kontynuować</Text>
 
         {error && (
           <Text style={styles.error}>{error}</Text>
@@ -54,7 +54,7 @@ export default function SignInScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="Hasło"
           placeholderTextColor="#666"
           value={password}
           onChangeText={setPassword}
@@ -66,18 +66,18 @@ export default function SignInScreen() {
           onPress={handleSignIn}
           disabled={isLoading}>
           <Text style={styles.buttonText}>
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? 'Logowanie...' : 'Zaloguj się'}
           </Text>
         </Pressable>
 
         <Link href="/reset-password" style={styles.link}>
-          <Text style={styles.linkText}>Forgot password?</Text>
+          <Text style={styles.linkText}>Zapomniałeś hasła?</Text>
         </Link>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account?</Text>
+          <Text style={styles.footerText}>Nie masz konta?</Text>
           <Link href="/sign-up" style={styles.link}>
-            <Text style={[styles.linkText, styles.signUpText]}>Sign Up</Text>
+            <Text style={[styles.linkText, styles.signUpText]}>Zarejestruj się</Text>
           </Link>
         </View>
       </View>

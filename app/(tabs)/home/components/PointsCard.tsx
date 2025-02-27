@@ -36,18 +36,18 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
   });
 
   const rankDescriptions: { [key: string]: string } = {
-    Bronze: "Starter rank for new members.",
-    Silver: "Intermediate rank with additional perks.",
-    Gold: "Premium benefits unlocked.",
-    Platinum: "Advanced privileges available.",
-    Diamond: "Exclusive elite membership."
+    Nowicjusz: "Ranga początkowa dla nowych członków.",
+    Adept: "Ranga pośrednia z dodatkowymi korzyściami.",
+    Mistrz: "Odblokowane premium korzyści.",
+    Arcymistrz: "Dostępne zaawansowane przywileje.",
+    Omnipotent: "Ekskluzywne elitarne członkostwo."
   };
 
   return (
     <View style={[styles.pointsCard, isLoading && styles.pointsCardLoading]}>
       <View style={styles.pointsHeader}>
         <View>
-          <Text style={styles.pointsLabel}>Whole Points</Text>
+          <Text style={styles.pointsLabel}>Twoje Punkty</Text>
           <Text style={styles.pointsValue}>{points || 0}</Text>
         </View>
         <Pressable 
@@ -70,13 +70,13 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
           color={currentRank?.color || "#ff3b7f"} 
         />
         <Text style={[styles.tierText, { color: currentRank?.color || "#ff3b7f" }]}>
-          {currentRank?.name || 'Bronze'} Member
+          {currentRank?.name || 'Nowicjusz'}
         </Text>
         <Ionicons name="information-circle-outline" size={20} color="#fff" style={styles.infoIcon} />
       </Pressable>
       {pointsToNext > 0 && (
         <Text style={styles.nextRankText}>
-          {pointsToNext} points until next rank
+          {pointsToNext} punktów do następnej rangi
         </Text>
       )}
 
@@ -89,7 +89,7 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Available Ranks</Text>
+              <Text style={styles.modalTitle}>Dostępne Rangi</Text>
               <Pressable
                 onPress={() => setShowRanksModal(false)}
                 style={styles.closeButton}
@@ -112,7 +112,7 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
                       {rank.name}
                     </Text>
                     <Text style={styles.rankPoints}>
-                      {rank.minPoints.toLocaleString()} points required
+                      Wymagane {rank.minPoints.toLocaleString()} punktów
                     </Text>
                     <Text style={styles.rankInfoText}>
                       {rankDescriptions[rank.name]}
@@ -120,7 +120,7 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
                   </View>
                 </View>
                 {currentRank?.name === rank.name && (
-                  <Text style={styles.currentBadge}>Current</Text>
+                  <Text style={styles.currentBadge}>Aktualna</Text>
                 )}
               </View>
             ))}
@@ -139,6 +139,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: '#333',
+  },
+  pointsCardLoading: {
+    opacity: 0.7,
   },
   pointsHeader: {
     flexDirection: 'row',
@@ -250,12 +253,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   currentBadge: {
+    backgroundColor: 'rgba(255, 59, 127, 0.2)',
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     color: '#ff3b7f',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
-    marginLeft: 10,
-  },
-  pointsCardLoading: {
-    opacity: 0.7,
   },
 }); 

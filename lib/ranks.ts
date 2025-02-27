@@ -9,31 +9,31 @@ export interface Rank {
 
 export const ranks: Rank[] = [
   {
-    name: 'Bronze',
+    name: 'Nowicjusz',
     minPoints: 0,
     color: '#CD7F32',
     icon: 'star-outline'
   },
   {
-    name: 'Silver',
+    name: 'Adept',
     minPoints: 1000,
     color: '#C0C0C0',
     icon: 'star-half'
   },
   {
-    name: 'Gold',
+    name: 'Mistrz',
     minPoints: 5000,
     color: '#FFD700',
     icon: 'star'
   },
   {
-    name: 'Platinum',
+    name: 'Arcymistrz',
     minPoints: 10000,
     color: '#E5E4E2',
     icon: 'diamond'
   },
   {
-    name: 'Diamond',
+    name: 'Omnipotent',
     minPoints: 25000,
     color: '#B9F2FF',
     icon: 'diamond-sharp'

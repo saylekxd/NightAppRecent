@@ -14,7 +14,7 @@ export function Header({ fullName, username }: HeaderProps) {
       />
       <View style={styles.overlay} />
       <View style={styles.headerContent}>
-        <Text style={styles.welcomeText}>Welcome back,</Text>
+        <Text style={styles.welcomeText}>Witaj ponownie,</Text>
         <Text style={styles.nameText}>{fullName || username}</Text>
       </View>
     </View>

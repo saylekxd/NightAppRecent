@@ -8,7 +8,7 @@ interface EventsProps {
 export function Events({ events }: EventsProps) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Upcoming Events</Text>
+      <Text style={styles.sectionTitle}>Nadchodzące Wydarzenia</Text>
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
@@ -21,7 +21,7 @@ export function Events({ events }: EventsProps) {
             <View style={styles.eventInfo}>
               <Text style={styles.eventTitle}>{event.title}</Text>
               <Text style={styles.eventDate}>
-                {new Date(event.date).toLocaleDateString('en-US', {
+                {new Date(event.date).toLocaleDateString('pl-PL', {
                   weekday: 'short',
                   month: 'short',
                   day: 'numeric',

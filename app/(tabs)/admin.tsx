@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,7 +29,7 @@ export default function AdminScreen() {
       const data = await getAdminStats();
       setStats(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load stats');
+      setError(err instanceof Error ? err.message : 'Nie udało się załadować statystyk');
     } finally {
       setLoading(false);
     }
@@ -37,7 +38,7 @@ export default function AdminScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Ładowanie...</Text>
       </View>
     );
   }
@@ -50,14 +51,14 @@ export default function AdminScreen() {
       />
       
       <View style={styles.header}>
-        <Text style={styles.title}>Admin Panel</Text>
+        <Text style={styles.title}>Panel Administratora</Text>
       </View>
 
       {error ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={loadStats}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
+            <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
           </Pressable>
         </View>
       ) : (
@@ -68,9 +69,9 @@ export default function AdminScreen() {
                 <Ionicons name="scan" size={32} color="#ff3b7f" />
               </View>
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Scan QR Code</Text>
+                <Text style={styles.cardTitle}>Skanuj Kod QR</Text>
                 <Text style={styles.cardDescription}>
-                  Scan and validate entry passes
+                  Skanuj i weryfikuj przepustki wejściowe
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#666" />
@@ -83,9 +84,9 @@ export default function AdminScreen() {
                 <Ionicons name="gift" size={32} color="#ff3b7f" />
               </View>
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Redeem Rewards</Text>
+                <Text style={styles.cardTitle}>Realizuj Nagrody</Text>
                 <Text style={styles.cardDescription}>
-                  Process reward redemption codes
+                  Przetwarzaj kody realizacji nagród
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#666" />
@@ -98,9 +99,9 @@ export default function AdminScreen() {
                 <Ionicons name="calendar" size={32} color="#ff3b7f" />
               </View>
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Manage Events</Text>
+                <Text style={styles.cardTitle}>Zarządzaj Wydarzeniami</Text>
                 <Text style={styles.cardDescription}>
-                  Create and manage upcoming events
+                  Twórz i zarządzaj nadchodzącymi wydarzeniami
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#666" />
@@ -109,28 +110,28 @@ export default function AdminScreen() {
 
           <View style={styles.statsContainer}>
             <View style={styles.statsHeader}>
-              <Text style={styles.statsTitle}>Today's Stats</Text>
+              <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
               <Pressable onPress={loadStats}>
-                <Text style={styles.refreshText}>Refresh</Text>
+                <Text style={styles.refreshText}>Odśwież</Text>
               </Pressable>
             </View>
 
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-                <Text style={styles.statLabel}>Visits</Text>
+                <Text style={styles.statLabel}>Wizyty</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
-                <Text style={styles.statLabel}>Rewards Used</Text>
+                <Text style={styles.statLabel}>Użyte Nagrody</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
-                <Text style={styles.statLabel}>Points Awarded</Text>
+                <Text style={styles.statLabel}>Przyznane Punkty</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
-                <Text style={styles.statLabel}>Capacity</Text>
+                <Text style={styles.statLabel}>Pojemność</Text>
               </View>
             </View>
           </View>

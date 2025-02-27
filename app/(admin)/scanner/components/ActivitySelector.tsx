@@ -46,7 +46,7 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
       setActivities(data || []);
     } catch (err) {
       console.error('Failed to load activities:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load activities');
+      setError(err instanceof Error ? err.message : 'Nie udało się załadować aktywności');
     } finally {
       setLoading(false);
     }
@@ -57,7 +57,7 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
       <View style={styles.container}>
         <View style={styles.card}>
           <ActivityIndicator size="large" color="#ff3b7f" />
-          <Text style={styles.loadingText}>Loading activities...</Text>
+          <Text style={styles.loadingText}>Ładowanie aktywności...</Text>
         </View>
       </View>
     );
@@ -67,7 +67,7 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
     <View style={styles.container}>
       <View style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.title}>Select Activity</Text>
+          <Text style={styles.title}>Wybierz Aktywność</Text>
           <Pressable style={styles.closeButton} onPress={onCancel}>
             <Ionicons name="close" size={24} color="#fff" />
           </Pressable>
@@ -78,14 +78,14 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
             <Ionicons name="alert-circle" size={48} color="#F44336" />
             <Text style={styles.errorText}>{error}</Text>
             <Pressable style={styles.retryButton} onPress={loadActivities}>
-              <Text style={styles.buttonText}>Try Again</Text>
+              <Text style={styles.buttonText}>Spróbuj Ponownie</Text>
             </Pressable>
           </View>
         ) : activities.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="information-circle" size={48} color="#666" />
-            <Text style={styles.emptyText}>No activities available</Text>
-            <Text style={styles.emptyDetail}>Please try again later</Text>
+            <Text style={styles.emptyText}>Brak dostępnych aktywności</Text>
+            <Text style={styles.emptyDetail}>Spróbuj ponownie później</Text>
           </View>
         ) : (
           <View style={styles.activities}>

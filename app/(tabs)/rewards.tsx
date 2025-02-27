@@ -47,7 +47,7 @@ export default function RewardsScreen() {
       setRewards(rewardsData);
       setRedemptions(redemptionsData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setLoading(false);
     }
@@ -66,7 +66,7 @@ export default function RewardsScreen() {
       );
 
       if (existingRedemption) {
-        setError('You already have an active redemption for this reward');
+        setError('Masz już aktywne wykorzystanie tej nagrody');
         return;
       }
 
@@ -78,7 +78,7 @@ export default function RewardsScreen() {
       setShowRedemptionModal(true);
       await loadData(); // Refresh data
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setRedeeming(false);
     }
@@ -95,11 +95,11 @@ export default function RewardsScreen() {
       />
       
       <View style={styles.header}>
-        <Text style={styles.title}>Rewards</Text>
+        <Text style={styles.title}>Nagrody</Text>
         <View style={styles.headerActions}>
           <View style={styles.pointsInfo}>
             <Ionicons name="star" size={20} color="#ff3b7f" />
-            <Text style={styles.pointsText}>{points} points</Text>
+            <Text style={styles.pointsText}>{points} punktów</Text>
           </View>
           <Pressable 
             style={[styles.refreshButton, loading && styles.refreshButtonLoading]}
@@ -116,13 +116,13 @@ export default function RewardsScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={loadData}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
+            <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
           </Pressable>
         </View>
       )}
 
       <View style={[styles.section, loading && styles.sectionLoading]}>
-        <Text style={styles.sectionTitle}>Available Rewards</Text>
+        <Text style={styles.sectionTitle}>Dostępne Nagrody</Text>
         {rewards.map((reward) => {
           const hasActiveRedemption = redemptions.some(
             r => r.reward.id === reward.id && r.status === 'active' && new Date(r.expires_at) > new Date()
@@ -136,7 +136,7 @@ export default function RewardsScreen() {
                 <Text style={styles.rewardDescription}>{reward.description}</Text>
                 <View style={styles.rewardPoints}>
                   <Ionicons name="star" size={16} color="#ff3b7f" />
-                  <Text style={styles.pointsRequired}>{reward.points_required} points</Text>
+                  <Text style={styles.pointsRequired}>{reward.points_required} punktów</Text>
                 </View>
                 <Pressable
                   style={[
@@ -147,12 +147,12 @@ export default function RewardsScreen() {
                   disabled={points < reward.points_required || hasActiveRedemption || redeeming}>
                   <Text style={styles.redeemButtonText}>
                     {redeeming && selectedReward?.id === reward.id
-                      ? 'Redeeming...'
+                      ? 'Realizuję...'
                       : hasActiveRedemption
-                      ? 'Already Redeemed'
+                      ? 'Już Zrealizowano'
                       : points < reward.points_required
-                      ? 'Not Enough Points'
-                      : 'Redeem Reward'}
+                      ? 'Za Mało Punktów'
+                      : 'Zrealizuj Nagrodę'}
                   </Text>
                 </Pressable>
               </View>
@@ -163,7 +163,7 @@ export default function RewardsScreen() {
 
       {activeRedemptions.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Active Coupons</Text>
+          <Text style={styles.sectionTitle}>Aktywne Kupony</Text>
           {activeRedemptions.map((redemption) => (
             <View key={redemption.id} style={styles.redemptionCard}>
               <Image source={{ uri: redemption.reward.image_url }} style={styles.redemptionImage} />
@@ -172,10 +172,10 @@ export default function RewardsScreen() {
                   <Text style={styles.redemptionTitle}>{redemption.reward.title}</Text>
                   <View style={styles.redemptionStatus}>
                     <View style={[styles.statusBadge, styles.statusActive]}>
-                      <Text style={styles.statusText}>Active</Text>
+                      <Text style={styles.statusText}>Aktywny</Text>
                     </View>
                     <Text style={styles.expiryText}>
-                      Expires: {new Date(redemption.expires_at).toLocaleDateString()}
+                      Wygasa: {new Date(redemption.expires_at).toLocaleDateString('pl-PL')}
                     </Text>
                   </View>
                 </View>
@@ -185,7 +185,7 @@ export default function RewardsScreen() {
                     setRedemptionResult(redemption);
                     setShowRedemptionModal(true);
                   }}>
-                  <Text style={styles.viewCodeButtonText}>View Code</Text>
+                  <Text style={styles.viewCodeButtonText}>Pokaż Kod</Text>
                 </Pressable>
               </View>
             </View>
@@ -198,7 +198,7 @@ export default function RewardsScreen() {
           <Pressable 
             style={styles.usedCouponsHeader}
             onPress={() => setShowUsedCoupons(!showUsedCoupons)}>
-            <Text style={styles.sectionTitle}>Past Coupons</Text>
+            <Text style={styles.sectionTitle}>Wcześniejsze Kupony</Text>
             <Ionicons 
               name={showUsedCoupons ? 'chevron-up' : 'chevron-down'} 
               size={24} 
@@ -222,11 +222,11 @@ export default function RewardsScreen() {
                     redemption.status === 'used' ? styles.statusUsed : styles.statusExpired
                   ]}>
                     <Text style={styles.statusText}>
-                      {redemption.status === 'used' ? 'Used' : 'Expired'}
+                      {redemption.status === 'used' ? 'Użyty' : 'Wygasły'}
                     </Text>
                   </View>
                   <Text style={styles.expiryText}>
-                    {new Date(redemption.expires_at).toLocaleDateString()}
+                    {new Date(redemption.expires_at).toLocaleDateString('pl-PL')}
                   </Text>
                 </View>
               </View>
@@ -242,7 +242,7 @@ export default function RewardsScreen() {
         onRequestClose={() => setShowRedemptionModal(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Reward Redeemed!</Text>
+            <Text style={styles.modalTitle}>Nagroda Zrealizowana!</Text>
             {redemptionResult && (
               <>
                 <Text style={styles.modalSubtitle}>{redemptionResult.reward.title}</Text>
@@ -256,15 +256,15 @@ export default function RewardsScreen() {
                 </View>
                 <Text style={styles.codeText}>{redemptionResult.code}</Text>
                 <Text style={styles.modalInfo}>
-                  Show this code to redeem your reward.{'\n'}
-                  Valid until: {new Date(redemptionResult.expires_at).toLocaleDateString()}
+                  Pokaż ten kod, aby odebrać nagrodę.{'\n'}
+                  Ważny do: {new Date(redemptionResult.expires_at).toLocaleDateString('pl-PL')}
                 </Text>
               </>
             )}
             <Pressable
               style={styles.modalButton}
               onPress={() => setShowRedemptionModal(false)}>
-              <Text style={styles.modalButtonText}>Close</Text>
+              <Text style={styles.modalButtonText}>Zamknij</Text>
             </Pressable>
           </View>
         </View>

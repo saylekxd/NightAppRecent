@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Pressable } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,7 +25,7 @@ export default function QRCodeScreen() {
       const qrCodeData = await getActiveQRCode();
       setQrCode(qrCodeData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Wystąpił błąd');
     } finally {
       setLoading(false);
     }
@@ -33,7 +34,7 @@ export default function QRCodeScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Ładowanie...</Text>
       </View>
     );
   }
@@ -52,12 +53,12 @@ export default function QRCodeScreen() {
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
             <Pressable style={styles.retryButton} onPress={loadData}>
-              <Text style={styles.retryButtonText}>Try Again</Text>
+              <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
             </Pressable>
           </View>
         ) : (
           <>
-            <Text style={styles.subtitle}>Show this QR code at the entrance</Text>
+            <Text style={styles.subtitle}>Pokaż ten kod QR przy wejściu</Text>
             
             <View style={styles.qrContainer}>
               <QRCode
@@ -69,32 +70,32 @@ export default function QRCodeScreen() {
             </View>
 
             <View style={styles.validityContainer}>
-              <Text style={styles.validityTitle}>Valid Until</Text>
+              <Text style={styles.validityTitle}>Ważny Do</Text>
               <Text style={styles.validityTime}>
                 {qrCode?.expires_at
-                  ? new Date(qrCode.expires_at).toLocaleString()
-                  : 'N/A'}
+                  ? new Date(qrCode.expires_at).toLocaleString('pl-PL')
+                  : 'Brak danych'}
               </Text>
             </View>
             
             <View style={styles.infoContainer}>
-              <Text style={styles.infoTitle}>How to use</Text>
+              <Text style={styles.infoTitle}>Jak używać</Text>
               <View style={styles.infoItem}>
                 <Ionicons name="scan-outline" size={24} color="#ff3b7f" />
                 <Text style={styles.infoText}>
-                  Show this QR code to staff when entering
+                  Pokaż ten kod QR obsłudze przy wejściu
                 </Text>
               </View>
               <View style={styles.infoItem}>
                 <Ionicons name="time-outline" size={24} color="#ff3b7f" />
                 <Text style={styles.infoText}>
-                  QR code refreshes every 24 hours for security
+                  Kod QR odnawia się co 24 godziny dla bezpieczeństwa
                 </Text>
               </View>
               <View style={styles.infoItem}>
                 <Ionicons name="shield-checkmark-outline" size={24} color="#ff3b7f" />
                 <Text style={styles.infoText}>
-                  Each code is unique and tied to your account
+                  Każdy kod jest unikalny i powiązany z Twoim kontem
                 </Text>
               </View>
             </View>

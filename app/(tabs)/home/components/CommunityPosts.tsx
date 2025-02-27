@@ -36,11 +36,11 @@ export function CommunityPosts({
 }: CommunityPostsProps) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Community Spotlight</Text>
+      <Text style={styles.sectionTitle}>Społeczność</Text>
       <View style={styles.postInput}>
         <TextInput
           style={styles.input}
-          placeholder="Share something with the community..."
+          placeholder="Podziel się czymś ze społecznością..."
           placeholderTextColor="#666"
           value={newPost}
           onChangeText={onNewPostChange}
@@ -50,7 +50,7 @@ export function CommunityPosts({
         />
         <View style={styles.inputFooter}>
           <Text style={styles.disclaimer}>
-            Note: Posts will be reviewed before appearing in the community feed.
+            Uwaga: Posty będą przeglądane przed pojawieniem się w kanale społeczności.
           </Text>
           <Text style={styles.characterCount}>
             {newPost.length}/100
@@ -61,7 +61,7 @@ export function CommunityPosts({
           onPress={onSubmitPost}
           disabled={!newPost.trim() || posting}>
           <Text style={styles.postButtonText}>
-            {posting ? 'Submitting...' : 'Submit for Review'}
+            {posting ? 'Wysyłanie...' : 'Wyślij do weryfikacji'}
           </Text>
         </Pressable>
       </View>
@@ -91,12 +91,12 @@ export function CommunityPosts({
                       color={post.user?.rank?.color || "#CD7F32"} 
                     />
                     <Text style={[styles.rankText, { color: post.user?.rank?.color || "#CD7F32" }]}>
-                      {post.user?.rank?.name || 'Bronze'}
+                      {post.user?.rank?.name || 'Nowicjusz'}
                     </Text>
                   </View>
                 </View>
                 <Text style={styles.postTime}>
-                  {new Date(post.created_at).toLocaleDateString('en-US', {
+                  {new Date(post.created_at).toLocaleDateString('pl-PL', {
                     month: 'short',
                     day: 'numeric',
                     hour: '2-digit',
@@ -259,14 +259,13 @@ const styles = StyleSheet.create({
   rankBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: 12,
-    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
   rankText: {
     fontSize: 12,
-    fontWeight: '500',
+    marginLeft: 4,
   },
 }); 
