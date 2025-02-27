@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Animated, ActivityIndicator, Easing } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, Animated, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { getProfile } from '@/lib/auth';
@@ -7,6 +7,7 @@ import { getTransactionHistory, Transaction } from '@/lib/points';
 import { supabase } from '@/lib/supabase';
 import { getUserRank, getPointsToNextRank, Rank, ranks } from '@/lib/ranks';
 import { Header, PointsCard, CommunityPosts, Events, Activities } from './home/components';
+import { LoadingAnimation } from '@/app/components/LoadingAnimation';
 
 interface CommunityPost {
   id: string;
@@ -196,16 +197,7 @@ export default function HomeScreen() {
   }, []);
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <LinearGradient
-          colors={['#1a1a1a', '#000']}
-          style={styles.background}
-        />
-        <ActivityIndicator size="large" color="#ff3b7f" />
-        <Text style={styles.loadingText}>Ładowanie...</Text>
-      </View>
-    );
+    return <LoadingAnimation />;
   }
 
   return (
@@ -291,18 +283,5 @@ const styles = StyleSheet.create({
   },
   scrollContentContainer: {
     paddingBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-    gap: 16,
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 10,
-    fontWeight: '500',
   },
 });

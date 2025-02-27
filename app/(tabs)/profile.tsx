@@ -8,6 +8,7 @@ import { getProfileStats, ProfileStats } from '@/lib/profile';
 import { router } from 'expo-router';
 import { getUserRank, getPointsToNextRank, Rank } from '@/lib/ranks';
 import { getTransactionHistory, Transaction } from '@/lib/points';
+import { ProfileSkeleton } from '@/app/components/SkeletonLoader';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
@@ -61,11 +62,7 @@ export default function ProfileScreen() {
   };
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Ładowanie...</Text>
-      </View>
-    );
+    return <ProfileSkeleton />;
   }
 
   return (

@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getPointsBalance } from '@/lib/points';
 import { Reward, RewardRedemption, getAvailableRewards, redeemReward, getUserRedemptions } from '@/lib/rewards';
 import QRCode from 'react-native-qrcode-svg';
+import { RewardsSkeleton } from '@/app/components/SkeletonLoader';
 
 export default function RewardsScreen() {
   const [points, setPoints] = useState(0);
@@ -86,6 +87,10 @@ export default function RewardsScreen() {
 
   const activeRedemptions = redemptions.filter(r => r.status === 'active' && new Date(r.expires_at) > new Date());
   const usedRedemptions = redemptions.filter(r => r.status === 'used' || r.status === 'expired' || new Date(r.expires_at) <= new Date());
+
+  if (loading) {
+    return <RewardsSkeleton />;
+  }
 
   return (
     <ScrollView style={styles.container}>

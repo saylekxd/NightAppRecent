@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getAdminStats } from '@/lib/admin';
+import { DashboardSkeleton } from '@/app/components/SkeletonLoader';
 
 interface AdminStats {
   visits_count: number;
@@ -36,11 +37,7 @@ export default function AdminDashboardScreen() {
   };
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Ładowanie...</Text>
-      </View>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

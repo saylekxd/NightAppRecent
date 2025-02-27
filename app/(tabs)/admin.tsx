@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getAdminStats, checkAdminStatus } from '@/lib/admin';
+import { DashboardSkeleton, CardSkeleton } from '@/app/components/SkeletonLoader';
 
 interface AdminStats {
   visits_count: number;
@@ -21,13 +22,8 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     checkUserAdmin();
+    loadStats();
   }, []);
-
-  useEffect(() => {
-    if (isAdmin) {
-      loadStats();
-    }
-  }, [isAdmin]);
 
   const checkUserAdmin = async () => {
     try {
@@ -50,6 +46,10 @@ export default function DashboardScreen() {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -124,9 +124,7 @@ export default function DashboardScreen() {
             </View>
 
             {loading ? (
-              <View style={styles.loadingContainer}>
-                <Text style={styles.loadingText}>Ładowanie...</Text>
-              </View>
+              <CardSkeleton />
             ) : error ? (
               <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>{error}</Text>
@@ -291,5 +289,21 @@ const styles = StyleSheet.create({
   retryButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  notAdminContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notAdminText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 10,
+  },
+  notAdminSubtext: {
+    color: '#999',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
