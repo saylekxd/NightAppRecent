@@ -22,14 +22,16 @@ export default function TabLayout() {
       
       // Check if we're in the admin section using segments
       const segmentsArray = segments as unknown as string[];
-      const isInAdminSection = segmentsArray.some(segment => segment === 'admin');
+      // Only check admin section routes, not the admin tab itself
+      const isInAdminSection = segmentsArray.some(segment => segment === '(admin)');
       if (!profile.is_admin && isInAdminSection) {
         router.replace('/(tabs)');
       }
     } catch (error) {
       setIsAdmin(false);
       const segmentsArray = segments as unknown as string[];
-      const isInAdminSection = segmentsArray.some(segment => segment === 'admin');
+      // Only check admin section routes, not the admin tab itself
+      const isInAdminSection = segmentsArray.some(segment => segment === '(admin)');
       if (isInAdminSection) {
         router.replace('/(tabs)');
       }
@@ -99,17 +101,15 @@ export default function TabLayout() {
           ),
         }}
       />
-      {isAdmin && (
-        <Tabs.Screen
-          name="admin"
-          options={{
-            title: 'Admin',
-            tabBarIcon: ({ size, color }) => (
-              <Ionicons name="settings" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="apps" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

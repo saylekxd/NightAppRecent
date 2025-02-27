@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { getAdminStats } from '@/lib/admin';
+import { getAdminStats, checkAdminStatus } from '@/lib/admin';
 
 interface AdminStats {
   visits_count: number;
@@ -13,14 +13,30 @@ interface AdminStats {
   capacity_percentage: number;
 }
 
-export default function AdminScreen() {
+export default function DashboardScreen() {
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    loadStats();
+    checkUserAdmin();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadStats();
+    }
+  }, [isAdmin]);
+
+  const checkUserAdmin = async () => {
+    try {
+      const adminStatus = await checkAdminStatus();
+      setIsAdmin(adminStatus);
+    } catch (err) {
+      setIsAdmin(false);
+    }
+  };
 
   const loadStats = async () => {
     try {
@@ -35,14 +51,6 @@ export default function AdminScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Ładowanie...</Text>
-      </View>
-    );
-  }
-
   return (
     <ScrollView style={styles.container}>
       <LinearGradient
@@ -51,63 +59,62 @@ export default function AdminScreen() {
       />
       
       <View style={styles.header}>
-        <Text style={styles.title}>Panel Administratora</Text>
+        <Text style={styles.title}>Dashboard</Text>
       </View>
 
-      {error ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-          <Pressable style={styles.retryButton} onPress={loadStats}>
-            <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
+      <View style={styles.content}>
+        {/* User accessible features */}
+        <Pressable style={styles.card} onPress={() => router.push('/')}>
+          <View style={styles.cardIcon}>
+            <Ionicons name="calendar" size={32} color="#ff3b7f" />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Nadchodzące Wydarzenia</Text>
+            <Text style={styles.cardDescription}>
+              Sprawdź nadchodzące wydarzenia i promocje
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#666" />
+        </Pressable>
+
+        <Pressable style={styles.card} onPress={() => router.push('/(tabs)/rewards')}>
+          <View style={styles.cardIcon}>
+            <Ionicons name="star" size={32} color="#ff3b7f" />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Specjalne Oferty</Text>
+            <Text style={styles.cardDescription}>
+              Odkryj specjalne oferty przygotowane dla Ciebie
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#666" />
+        </Pressable>
+
+        {/* Admin section button - only visible to admins */}
+        {isAdmin && (
+          <Pressable 
+            style={[styles.card, styles.adminCard]}
+            onPress={() => {
+              router.push({
+                pathname: "/(admin)/dashboard"
+              });
+            }}
+          >
+            <View style={styles.cardIcon}>
+              <Ionicons name="settings" size={32} color="#ff3b7f" />
+            </View>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>Panel Administratora</Text>
+              <Text style={styles.cardDescription}>
+                Dostęp do funkcji administracyjnych
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color="#666" />
           </Pressable>
-        </View>
-      ) : (
-        <View style={styles.content}>
-          <Link href="/(admin)/scan" asChild>
-            <Pressable style={styles.card}>
-              <View style={styles.cardIcon}>
-                <Ionicons name="scan" size={32} color="#ff3b7f" />
-              </View>
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Skanuj Kod QR</Text>
-                <Text style={styles.cardDescription}>
-                  Skanuj i weryfikuj przepustki wejściowe
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={24} color="#666" />
-            </Pressable>
-          </Link>
+        )}
 
-          <Link href="/(admin)/redeem" asChild>
-            <Pressable style={styles.card}>
-              <View style={styles.cardIcon}>
-                <Ionicons name="gift" size={32} color="#ff3b7f" />
-              </View>
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Realizuj Nagrody</Text>
-                <Text style={styles.cardDescription}>
-                  Przetwarzaj kody realizacji nagród
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={24} color="#666" />
-            </Pressable>
-          </Link>
-
-          <Link href="/(admin)/events" asChild>
-            <Pressable style={styles.card}>
-              <View style={styles.cardIcon}>
-                <Ionicons name="calendar" size={32} color="#ff3b7f" />
-              </View>
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Zarządzaj Wydarzeniami</Text>
-                <Text style={styles.cardDescription}>
-                  Twórz i zarządzaj nadchodzącymi wydarzeniami
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={24} color="#666" />
-            </Pressable>
-          </Link>
-
+        {/* Admin stats - only visible to admins */}
+        {isAdmin && (
           <View style={styles.statsContainer}>
             <View style={styles.statsHeader}>
               <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
@@ -116,27 +123,40 @@ export default function AdminScreen() {
               </Pressable>
             </View>
 
-            <View style={styles.statsGrid}>
-              <View style={styles.statCard}>
-                <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-                <Text style={styles.statLabel}>Wizyty</Text>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <Text style={styles.loadingText}>Ładowanie...</Text>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
-                <Text style={styles.statLabel}>Użyte Nagrody</Text>
+            ) : error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+                <Pressable style={styles.retryButton} onPress={loadStats}>
+                  <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
+                </Pressable>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
-                <Text style={styles.statLabel}>Przyznane Punkty</Text>
+            ) : (
+              <View style={styles.statsGrid}>
+                <View style={styles.statCard}>
+                  <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
+                  <Text style={styles.statLabel}>Wizyty</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
+                  <Text style={styles.statLabel}>Użyte Nagrody</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
+                  <Text style={styles.statLabel}>Przyznane Punkty</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
+                  <Text style={styles.statLabel}>Pojemność</Text>
+                </View>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
-                <Text style={styles.statLabel}>Pojemność</Text>
-              </View>
-            </View>
+            )}
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -147,10 +167,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    padding: 20,
     alignItems: 'center',
-    backgroundColor: '#000',
   },
   loadingText: {
     color: '#fff',
@@ -184,6 +202,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#333',
+  },
+  adminCard: {
+    borderColor: '#ff3b7f',
+    borderWidth: 2,
+    marginTop: 30,
   },
   cardIcon: {
     width: 60,
@@ -250,25 +273,23 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   errorContainer: {
-    margin: 20,
     padding: 20,
-    backgroundColor: 'rgba(244, 67, 54, 0.1)',
-    borderRadius: 15,
     alignItems: 'center',
   },
   errorText: {
-    color: '#F44336',
+    color: '#ff3b7f',
+    fontSize: 16,
+    marginBottom: 10,
     textAlign: 'center',
-    marginBottom: 15,
   },
   retryButton: {
     backgroundColor: '#ff3b7f',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 8,
   },
   retryButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });

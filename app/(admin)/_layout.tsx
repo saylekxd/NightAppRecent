@@ -26,6 +26,7 @@ export default function AdminLayout() {
       <Stack.Screen name="events" />
       <Stack.Screen name="scan" />
       <Stack.Screen name="redeem" />
+      <Stack.Screen name="dashboard" />
     </Stack>
   );
 }
