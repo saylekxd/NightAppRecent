@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
+import { useRef, useEffect } from 'react';
 
 interface HeaderProps {
   fullName: string;
@@ -6,17 +7,43 @@ interface HeaderProps {
 }
 
 export function Header({ fullName, username }: HeaderProps) {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, []);
+
   return (
     <View style={styles.header}>
-      <Image
+      <Animated.Image
         source={{ uri: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800' }}
-        style={styles.headerImage}
+        style={[styles.headerImage, { transform: [{ scale: 1.05 }] }]}
       />
       <View style={styles.overlay} />
-      <View style={styles.headerContent}>
+      <Animated.View 
+        style={[
+          styles.headerContent,
+          { 
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }]
+          }
+        ]}
+      >
         <Text style={styles.welcomeText}>Witaj ponownie,</Text>
         <Text style={styles.nameText}>{fullName || username}</Text>
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -25,6 +52,9 @@ const styles = StyleSheet.create({
   header: {
     height: 200,
     position: 'relative',
+    overflow: 'hidden',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   headerImage: {
     width: '100%',
@@ -32,7 +62,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7))',
   },
   headerContent: {
     position: 'absolute',
@@ -48,5 +79,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 28,
     fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
 }); 

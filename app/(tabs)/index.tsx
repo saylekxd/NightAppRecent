@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, Animated, ActivityIndicator, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { getProfile } from '@/lib/auth';
 import { getUpcomingEvents, Event } from '@/lib/events';
 import { getTransactionHistory, Transaction } from '@/lib/points';
@@ -35,6 +35,13 @@ export default function HomeScreen() {
   const [error, setError] = useState<string | null>(null);
   const [currentRank, setCurrentRank] = useState<Rank | null>(null);
   const [pointsToNext, setPointsToNext] = useState<number>(0);
+  
+  // Animation refs
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(20)).current;
+  
+  // Component-specific animations - using a single animation controller for better synchronization
+  const contentAnim = useRef(new Animated.Value(0)).current;
 
   const loadData = async () => {
     try {
@@ -171,6 +178,18 @@ export default function HomeScreen() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      // Single animation sequence for better synchronization
+      Animated.timing(contentAnim, {
+        toValue: 1,
+        duration: 600,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loading]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     loadData();
@@ -179,7 +198,12 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <LinearGradient
+          colors={['#1a1a1a', '#000']}
+          style={styles.background}
+        />
+        <ActivityIndicator size="large" color="#ff3b7f" />
+        <Text style={styles.loadingText}>Ładowanie...</Text>
       </View>
     );
   }
@@ -190,8 +214,19 @@ export default function HomeScreen() {
         colors={['#1a1a1a', '#000']}
         style={styles.background}
       />
-      <Header fullName={profile?.full_name} username={profile?.username} />
-      <ScrollView
+      <Animated.View style={{
+        opacity: contentAnim,
+        transform: [{ 
+          translateY: contentAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-10, 0]
+          })
+        }]
+      }}>
+        <Header fullName={profile?.full_name} username={profile?.username} />
+      </Animated.View>
+      
+      <Animated.ScrollView
         style={styles.scrollContent}
         contentContainerStyle={styles.scrollContentContainer}
         refreshControl={
@@ -200,26 +235,41 @@ export default function HomeScreen() {
             onRefresh={onRefresh}
             tintColor="#fff"
             titleColor="#fff"
+            colors={["#ff3b7f"]}
           />
         }
       >
-        <PointsCard
-          points={profile?.points || 0}
-          currentRank={currentRank}
-          pointsToNext={pointsToNext}
-          onRefresh={loadData}
-        />
-        <CommunityPosts
-          posts={posts}
-          newPost={newPost}
-          posting={posting}
-          onNewPostChange={setNewPost}
-          onSubmitPost={handlePost}
-          onLike={handleLike}
-        />
-        <Events events={events} />
-        <Activities activities={activities} />
-      </ScrollView>
+        <Animated.View style={{
+          opacity: contentAnim,
+          transform: [{ 
+            translateY: contentAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [20, 0]
+            })
+          }]
+        }}>
+          <PointsCard
+            points={profile?.points || 0}
+            currentRank={currentRank}
+            pointsToNext={pointsToNext}
+            onRefresh={loadData}
+            isLoading={refreshing}
+          />
+        
+          <CommunityPosts
+            posts={posts}
+            newPost={newPost}
+            posting={posting}
+            onNewPostChange={setNewPost}
+            onSubmitPost={handlePost}
+            onLike={handleLike}
+          />
+        
+          <Events events={events} />
+        
+          <Activities activities={activities} />
+        </Animated.View>
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -247,9 +297,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000',
+    gap: 16,
   },
   loadingText: {
     color: '#fff',
     fontSize: 16,
+    marginTop: 10,
+    fontWeight: '500',
   },
 });

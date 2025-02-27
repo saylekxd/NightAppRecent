@@ -1,6 +1,8 @@
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, TextInput, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Rank } from '@/lib/ranks';
+import { useRef, useEffect } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface CommunityPost {
   id: string;
@@ -34,10 +36,65 @@ export function CommunityPosts({
   onSubmitPost, 
   onLike 
 }: CommunityPostsProps) {
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const inputAnim = useRef(new Animated.Value(0)).current;
+  const likeAnimations = useRef<{ [key: string]: Animated.Value }>({}).current;
+
+  useEffect(() => {
+    // Initialize like animations for each post
+    posts.forEach(post => {
+      if (!likeAnimations[post.id]) {
+        likeAnimations[post.id] = new Animated.Value(1);
+      }
+    });
+
+    Animated.timing(inputAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, [posts]);
+
+  const handleLikeWithAnimation = (postId: string, hasLiked: boolean) => {
+    // Animate the heart icon
+    Animated.sequence([
+      Animated.timing(likeAnimations[postId], {
+        toValue: 1.3,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(likeAnimations[postId], {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      })
+    ]).start();
+    
+    onLike(postId, hasLiked);
+  };
+
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Społeczność</Text>
-      <View style={styles.postInput}>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Społeczność</Text>
+      </View>
+      
+      <Animated.View 
+        style={[
+          styles.postInput,
+          {
+            opacity: inputAnim,
+            transform: [
+              { 
+                translateY: inputAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0]
+                })
+              }
+            ]
+          }
+        ]}
+      >
         <TextInput
           style={styles.input}
           placeholder="Podziel się czymś ze społecznością..."
@@ -52,7 +109,10 @@ export function CommunityPosts({
           <Text style={styles.disclaimer}>
             Uwaga: Posty będą przeglądane przed pojawieniem się w kanale społeczności.
           </Text>
-          <Text style={styles.characterCount}>
+          <Text style={[
+            styles.characterCount,
+            newPost.length > 80 && { color: '#ff3b7f' }
+          ]}>
             {newPost.length}/100
           </Text>
         </View>
@@ -64,68 +124,99 @@ export function CommunityPosts({
             {posting ? 'Wysyłanie...' : 'Wyślij do weryfikacji'}
           </Text>
         </Pressable>
-      </View>
+      </Animated.View>
 
-      <ScrollView 
+      <Animated.ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
         style={styles.postsScroll}
         contentContainerStyle={styles.postsScrollContainer}
+        snapToInterval={295}
+        decelerationRate={0.85}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: true }
+        )}
       >
-        {posts.map((post) => (
-          <View key={post.id} style={styles.postCard}>
-            <View style={styles.postHeader}>
-              <Image
-                source={{
-                  uri: post.user?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800'
-                }}
-                style={styles.avatar}
+        {posts.map((post, index) => {
+          const inputRange = [
+            (index - 1) * 295,
+            index * 295,
+            (index + 1) * 295
+          ];
+          
+          const scale = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.95, 1, 0.95],
+            extrapolate: 'clamp'
+          });
+          
+          return (
+            <Animated.View 
+              key={post.id} 
+              style={[
+                styles.postCard,
+                { transform: [{ scale }] }
+              ]}
+            >
+              <LinearGradient
+                colors={['rgba(30, 30, 30, 0.6)', 'rgba(20, 20, 20, 0.8)']}
+                style={styles.cardGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
               />
-              <View style={styles.postHeaderText}>
-                <View style={styles.userNameContainer}>
-                  <Text style={styles.userName}>{post.user?.full_name}</Text>
-                  <View style={styles.rankBadge}>
+              <View style={styles.postHeader}>
+                <Image
+                  source={{
+                    uri: post.user?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800'
+                  }}
+                  style={styles.avatar}
+                />
+                <View style={styles.postHeaderText}>
+                  <View style={styles.userNameContainer}>
+                    <Text style={styles.userName}>{post.user?.full_name}</Text>
                     <Ionicons 
                       name={post.user?.rank?.icon || "star-outline"} 
-                      size={14} 
+                      size={16} 
                       color={post.user?.rank?.color || "#CD7F32"} 
                     />
-                    <Text style={[styles.rankText, { color: post.user?.rank?.color || "#CD7F32" }]}>
-                      {post.user?.rank?.name || 'Nowicjusz'}
-                    </Text>
                   </View>
+                  <Text style={styles.postTime}>
+                    {new Date(post.created_at).toLocaleDateString('pl-PL', {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </Text>
                 </View>
-                <Text style={styles.postTime}>
-                  {new Date(post.created_at).toLocaleDateString('pl-PL', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </Text>
               </View>
-            </View>
-            <Text style={styles.postContent}>{post.content}</Text>
-            <View style={styles.postActions}>
-              <Pressable
-                style={styles.likeButton}
-                onPress={() => onLike(post.id, post.has_liked)}>
-                <Ionicons
-                  name={post.has_liked ? 'heart' : 'heart-outline'}
-                  size={24}
-                  color={post.has_liked ? '#ff3b7f' : '#fff'}
-                />
-                <Text style={[
-                  styles.likeCount,
-                  post.has_liked && styles.likedCount
-                ]}>
-                  {post.likes_count}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+              <Text style={styles.postContent}>{post.content}</Text>
+              <View style={styles.postActions}>
+                <Pressable
+                  style={styles.likeButton}
+                  onPress={() => handleLikeWithAnimation(post.id, post.has_liked)}>
+                  <Animated.View style={{ 
+                    transform: [{ scale: likeAnimations[post.id] || 1 }]
+                  }}>
+                    <Ionicons
+                      name={post.has_liked ? 'heart' : 'heart-outline'}
+                      size={24}
+                      color={post.has_liked ? '#ff3b7f' : '#fff'}
+                    />
+                  </Animated.View>
+                  <Text style={[
+                    styles.likeCount,
+                    post.has_liked && styles.likedCount
+                  ]}>
+                    {post.likes_count}
+                  </Text>
+                </Pressable>
+              </View>
+            </Animated.View>
+          );
+        })}
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -133,13 +224,20 @@ export function CommunityPosts({
 const styles = StyleSheet.create({
   section: {
     padding: 20,
-    
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
   },
   sectionTitle: {
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 15,
+  },
+  viewAllButton: {
+    display: 'none',
   },
   postInput: {
     backgroundColor: '#1a1a1a',
@@ -147,7 +245,12 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: 'rgba(51, 51, 51, 0.5)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   input: {
     color: '#fff',
@@ -176,6 +279,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
   },
   postButtonDisabled: {
     opacity: 0.5,
@@ -191,7 +299,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   postsScrollContainer: {
-    paddingRight: 20,
+    paddingRight: 30,
+    paddingVertical: 15,
   },
   postCard: {
     width: 280,
@@ -201,7 +310,21 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: 'rgba(51, 51, 51, 0.5)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  cardGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
   postHeader: {
     flexDirection: 'row',
@@ -213,6 +336,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(51, 51, 51, 0.7)',
   },
   postHeaderText: {
     flex: 1,
@@ -240,8 +365,8 @@ const styles = StyleSheet.create({
   postActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(51, 51, 51, 0.7)',
     paddingTop: 15,
   },
   likeButton: {
@@ -251,21 +376,9 @@ const styles = StyleSheet.create({
   likeCount: {
     color: '#fff',
     marginLeft: 5,
-    fontSize: 16,
+    fontSize: 14,
   },
   likedCount: {
     color: '#ff3b7f',
-  },
-  rankBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  rankText: {
-    fontSize: 12,
-    marginLeft: 4,
   },
 }); 
