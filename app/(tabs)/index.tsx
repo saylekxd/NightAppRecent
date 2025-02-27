@@ -247,7 +247,7 @@ export default function HomeScreen() {
             onRefresh={loadData}
             isLoading={refreshing}
           />
-        
+          
           <CommunityPosts
             posts={posts}
             newPost={newPost}

@@ -19,6 +19,7 @@
     "@supabase/supabase-js": "^2.39.3",
     "babel-plugin-module-resolver": "^5.0.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "expo": "~52.0.36",
     "expo-av": "~15.0.2",
     "expo-barcode-scanner": "~12.9.3",
