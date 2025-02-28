@@ -28,7 +28,7 @@ export function Header({ fullName, username }: HeaderProps) {
   return (
     <View style={styles.header}>
       <Animated.Image
-        source={{ uri: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800' }}
+        source={{ uri: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvMS5wbmciLCJpYXQiOjE3NDA3NjE3MDcsImV4cCI6MTg5ODQ0MTcwN30.kE6yOUOLBDOcsIkJYm1f6WqvNAekuyuwwl9jdvDqNGA' }}
         style={[styles.headerImage, { transform: [{ scale: 1.05 }] }]}
       />
       <View style={styles.overlay} />

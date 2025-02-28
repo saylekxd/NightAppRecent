@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getAdminStats } from '@/lib/admin';
 import { DashboardSkeleton } from '@/app/components/SkeletonLoader';
+import { PromotionPhotos } from '@/app/components/PromotionPhotos';
 
 interface AdminStats {
   visits_count: number;
@@ -48,16 +49,15 @@ export default function AdminDashboardScreen() {
       />
       
       <View style={styles.header}>
-        <Pressable 
-          style={styles.backButton} 
-          onPress={() => router.back()}
-        >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </Pressable>
         <Text style={styles.title}>Panel Administratora</Text>
       </View>
 
-      {error ? (
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#ff3b7f" />
+          <Text style={styles.loadingText}>Ładowanie statystyk...</Text>
+        </View>
+      ) : error ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={loadStats}>
@@ -69,12 +69,12 @@ export default function AdminDashboardScreen() {
           <Link href="/(admin)/scan" asChild>
             <Pressable style={styles.card}>
               <View style={styles.cardIcon}>
-                <Ionicons name="scan" size={32} color="#ff3b7f" />
+                <Ionicons name="qr-code" size={32} color="#ff3b7f" />
               </View>
               <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>Skanuj Kod QR</Text>
                 <Text style={styles.cardDescription}>
-                  Skanuj i weryfikuj przepustki wejściowe
+                  Skanuj kody QR klientów
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#666" />
@@ -138,6 +138,8 @@ export default function AdminDashboardScreen() {
               </View>
             </View>
           </View>
+          
+          <PromotionPhotos />
         </View>
       )}
     </ScrollView>
@@ -171,9 +173,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  backButton: {
-    marginRight: 15,
   },
   title: {
     fontSize: 28,

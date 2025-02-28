@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getAdminStats, checkAdminStatus } from '@/lib/admin';
 import { DashboardSkeleton, CardSkeleton } from '@/app/components/SkeletonLoader';
 import { Review } from '@/components/Review';
 import { getReviewStats } from '@/lib/reviews';
+import { PromotionPhotos } from '@/app/components/PromotionPhotos';
 
 interface AdminStats {
   visits_count: number;
@@ -34,6 +35,7 @@ export default function DashboardScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -102,168 +104,163 @@ export default function DashboardScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <LinearGradient
-        colors={['#1a1a1a', '#000']}
-        style={styles.background}
-      />
-      
-      <View style={styles.header}>
-        <Text style={styles.title}>Dashboard</Text>
-      </View>
-
-      <View style={styles.content}>
-        {/* User Feedback Section */}
-        <View style={styles.feedbackSection}>
-          <Text style={styles.sectionTitle}>User Feedback</Text>
-          
-          <View style={styles.infoBox}>
-            <Ionicons name="information-circle" size={24} color="#ff3b7f" />
-            <Text style={styles.infoText}>
-              Users can only submit feedback if they've had a transaction in the last 24 hours and haven't already submitted a review during this period.
-            </Text>
-          </View>
-          
-          <Review onReviewSubmitted={loadData} />
-          
-          {/* Review Statistics - only visible to admins */}
-          {isAdmin && reviewStats && (
-            <View style={styles.reviewStatsContainer}>
-              <Text style={styles.reviewStatsTitle}>Feedback Statistics</Text>
-              
-              <View style={styles.reviewStatsSummary}>
-                <View style={styles.reviewStatItem}>
-                  <Text style={styles.reviewStatValue}>{reviewStats.totalReviews}</Text>
-                  <Text style={styles.reviewStatLabel}>Total Reviews</Text>
-                </View>
-                <View style={styles.reviewStatItem}>
-                  <Text style={styles.reviewStatValue}>{reviewStats.averageMood.toFixed(1)}</Text>
-                  <Text style={styles.reviewStatLabel}>Average Mood</Text>
-                </View>
-              </View>
-              
-              <Text style={styles.distributionTitle}>Mood Distribution</Text>
-              <View style={styles.moodDistribution}>
-                {Object.entries(reviewStats.moodDistribution).map(([mood, count]) => (
-                  <View key={mood} style={styles.moodItem}>
-                    <Ionicons 
-                      name={renderMoodIcon(parseInt(mood)) as any} 
-                      size={24} 
-                      color="#ff3b7f" 
-                    />
-                    <Text style={styles.moodCount}>{count}</Text>
-                    <View 
-                      style={[
-                        styles.moodBar, 
-                        { 
-                          width: `${(count / reviewStats.totalReviews) * 100}%`,
-                          backgroundColor: mood === '5' ? '#ff3b7f' : 
-                                          mood === '4' ? '#ff6b9f' : 
-                                          mood === '3' ? '#ff9bbf' : 
-                                          mood === '2' ? '#ffcbdf' : '#ffebf0'
-                        }
-                      ]} 
-                    />
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+    <View style={{ flex: 1 }}>
+      <ScrollView 
+        ref={scrollViewRef}
+        style={styles.container}
+      >
+        <LinearGradient
+          colors={['#1a1a1a', '#000']}
+          style={styles.background}
+        />
+        
+        <View style={styles.header}>
+          <Text style={styles.title}>Dashboard</Text>
         </View>
 
-        {/* User accessible features */}
-        <Pressable style={styles.card} onPress={() => router.push('/')}>
-          <View style={styles.cardIcon}>
-            <Ionicons name="calendar" size={32} color="#ff3b7f" />
-          </View>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Nadchodzące Wydarzenia</Text>
-            <Text style={styles.cardDescription}>
-              Sprawdź nadchodzące wydarzenia i promocje
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color="#666" />
-        </Pressable>
-
-        <Pressable style={styles.card} onPress={() => router.push('/(tabs)/rewards')}>
-          <View style={styles.cardIcon}>
-            <Ionicons name="star" size={32} color="#ff3b7f" />
-          </View>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Specjalne Oferty</Text>
-            <Text style={styles.cardDescription}>
-              Odkryj specjalne oferty przygotowane dla Ciebie
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color="#666" />
-        </Pressable>
-
-        {/* Admin section button - only visible to admins */}
-        {isAdmin && (
-          <Pressable 
-            style={[styles.card, styles.adminCard]}
-            onPress={() => {
-              router.push({
-                pathname: "/(admin)/dashboard"
-              });
-            }}
-          >
-            <View style={styles.cardIcon}>
-              <Ionicons name="settings" size={32} color="#ff3b7f" />
-            </View>
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Panel Administratora</Text>
-              <Text style={styles.cardDescription}>
-                Dostęp do funkcji administracyjnych
+        <View style={styles.content}>
+          {/* User Feedback Section */}
+          <View style={styles.feedbackSection}>
+            <Text style={styles.sectionTitle}>User Feedback</Text>
+            
+            <View style={styles.infoBox}>
+              <Ionicons name="information-circle" size={24} color="#ff3b7f" />
+              <Text style={styles.infoText}>
+                Users can only submit feedback if they've had a transaction in the last 24 hours and haven't already submitted a review during this period.
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color="#666" />
-          </Pressable>
-        )}
-
-        {/* Admin stats - only visible to admins */}
-        {isAdmin && (
-          <View style={styles.statsContainer}>
-            <View style={styles.statsHeader}>
-              <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
-              <Pressable onPress={loadData}>
-                <Text style={styles.refreshText}>Odśwież</Text>
-              </Pressable>
-            </View>
-
-            {loading ? (
-              <CardSkeleton />
-            ) : error ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
-                <Pressable style={styles.retryButton} onPress={loadData}>
-                  <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
-                </Pressable>
-              </View>
-            ) : (
-              <View style={styles.statsGrid}>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-                  <Text style={styles.statLabel}>Wizyty</Text>
+            
+            <Review onReviewSubmitted={loadData} />
+            
+            {/* Review Statistics - only visible to admins */}
+            {isAdmin && reviewStats && (
+              <View style={styles.reviewStatsContainer}>
+                <Text style={styles.reviewStatsTitle}>Feedback Statistics</Text>
+                
+                <View style={styles.reviewStatsSummary}>
+                  <View style={styles.reviewStatItem}>
+                    <Text style={styles.reviewStatValue}>{reviewStats.totalReviews}</Text>
+                    <Text style={styles.reviewStatLabel}>Total Reviews</Text>
+                  </View>
+                  <View style={styles.reviewStatItem}>
+                    <Text style={styles.reviewStatValue}>{reviewStats.averageMood.toFixed(1)}</Text>
+                    <Text style={styles.reviewStatLabel}>Average Mood</Text>
+                  </View>
                 </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
-                  <Text style={styles.statLabel}>Użyte Nagrody</Text>
-                </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
-                  <Text style={styles.statLabel}>Przyznane Punkty</Text>
-                </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
-                  <Text style={styles.statLabel}>Pojemność</Text>
+                
+                <Text style={styles.distributionTitle}>Mood Distribution</Text>
+                <View style={styles.moodDistribution}>
+                  {Object.entries(reviewStats.moodDistribution).map(([mood, count]) => (
+                    <View key={mood} style={styles.moodItem}>
+                      <Ionicons 
+                        name={renderMoodIcon(parseInt(mood)) as any} 
+                        size={24} 
+                        color="#ff3b7f" 
+                      />
+                      <Text style={styles.moodCount}>{count}</Text>
+                      <View 
+                        style={[
+                          styles.moodBar, 
+                          { 
+                            width: `${(count / reviewStats.totalReviews) * 100}%`,
+                            backgroundColor: mood === '5' ? '#ff3b7f' : 
+                                            mood === '4' ? '#ff6b9f' : 
+                                            mood === '3' ? '#ff9bbf' : 
+                                            mood === '2' ? '#ffcbdf' : '#ffebf0'
+                          }
+                        ]} 
+                      />
+                    </View>
+                  ))}
                 </View>
               </View>
             )}
           </View>
-        )}
-      </View>
-    </ScrollView>
+
+          {/* User accessible features */}
+          <Pressable style={styles.card} onPress={() => router.push('/menu')}>
+            <View style={styles.cardIcon}>
+              <Ionicons name="wine" size={32} color="#ff3b7f" />
+            </View>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>Menu Drinków i Shotów</Text>
+              <Text style={styles.cardDescription}>
+                Sprawdź dostępne drinki i shoty w naszym menu
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color="#666" />
+          </Pressable>
+
+          {/* Admin section button - only visible to admins */}
+          {isAdmin && (
+            <Pressable 
+              style={[styles.card, styles.adminCard]}
+              onPress={() => {
+                router.push({
+                  pathname: "/(admin)/dashboard"
+                });
+              }}
+            >
+              <View style={styles.cardIcon}>
+                <Ionicons name="settings" size={32} color="#ff3b7f" />
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>Panel Administratora</Text>
+                <Text style={styles.cardDescription}>
+                  Dostęp do funkcji administracyjnych
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color="#666" />
+            </Pressable>
+          )}
+
+          {/* Admin stats - only visible to admins */}
+          {isAdmin && (
+            <View style={styles.statsContainer}>
+              <View style={styles.statsHeader}>
+                <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
+                <Pressable onPress={loadData}>
+                  <Text style={styles.refreshText}>Odśwież</Text>
+                </Pressable>
+              </View>
+
+              {loading ? (
+                <CardSkeleton />
+              ) : error ? (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>{error}</Text>
+                  <Pressable style={styles.retryButton} onPress={loadData}>
+                    <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
+                  </Pressable>
+                </View>
+              ) : (
+                <View style={styles.statsGrid}>
+                  <View style={styles.statCard}>
+                    <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
+                    <Text style={styles.statLabel}>Wizyty</Text>
+                  </View>
+                  <View style={styles.statCard}>
+                    <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
+                    <Text style={styles.statLabel}>Użyte Nagrody</Text>
+                  </View>
+                  <View style={styles.statCard}>
+                    <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
+                    <Text style={styles.statLabel}>Przyznane Punkty</Text>
+                  </View>
+                  <View style={styles.statCard}>
+                    <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
+                    <Text style={styles.statLabel}>Pojemność</Text>
+                  </View>
+                </View>
+              )}
+            </View>
+          )}
+          
+          {/* Promotion Photos Section - moved to the bottom */}
+          <PromotionPhotos />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
