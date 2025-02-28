@@ -256,7 +256,7 @@ export default function DashboardScreen() {
             </View>
           )}
           
-          {/* Promotion Photos Section - moved to the bottom */}
+          {/* Promotion Photos Section */}
           <PromotionPhotos />
         </View>
       </ScrollView>

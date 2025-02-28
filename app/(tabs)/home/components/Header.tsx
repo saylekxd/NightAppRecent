@@ -28,7 +28,7 @@ export function Header({ fullName, username }: HeaderProps) {
   return (
     <View style={styles.header}>
       <Animated.Image
-        source={{ uri: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvMS5wbmciLCJpYXQiOjE3NDA3NjE3MDcsImV4cCI6MTg5ODQ0MTcwN30.kE6yOUOLBDOcsIkJYm1f6WqvNAekuyuwwl9jdvDqNGA' }}
+        source={{ uri: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/shine%20safe%20tonight%20(1).png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvc2hpbmUgc2FmZSB0b25pZ2h0ICgxKS5wbmciLCJpYXQiOjE3NDA3NjY3ODAsImV4cCI6MTg5ODQ0Njc4MH0.nJIWVVaEZooPIMyiDjO1L08yuPOws6hiFTcRMhasH24' }}
         style={[styles.headerImage, { transform: [{ scale: 1.05 }] }]}
       />
       <View style={styles.overlay} />

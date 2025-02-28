@@ -6,7 +6,6 @@ import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getAdminStats } from '@/lib/admin';
 import { DashboardSkeleton } from '@/app/components/SkeletonLoader';
-import { PromotionPhotos } from '@/app/components/PromotionPhotos';
 
 interface AdminStats {
   visits_count: number;
@@ -138,8 +137,6 @@ export default function AdminDashboardScreen() {
               </View>
             </View>
           </View>
-          
-          <PromotionPhotos />
         </View>
       )}
     </ScrollView>
