@@ -153,7 +153,7 @@ export default function ProfileScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => router.push('/account/notifications')}>
+          onPress={() => router.push('/account/preferences')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="settings-outline" size={24} color="#fff" />
             <Text style={styles.menuItemText}>Preferencje</Text>
@@ -177,7 +177,7 @@ export default function ProfileScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => router.push('https://support.example.com')}>
+          onPress={() => router.push('/account/help')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="help-circle-outline" size={24} color="#fff" />
             <Text style={styles.menuItemText}>Pomoc i Wsparcie</Text>
@@ -187,7 +187,7 @@ export default function ProfileScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => router.push('https://support.example.com')}>
+          onPress={() => router.push('/account/about')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="information-circle-outline" size={24} color="#fff" />
             <Text style={styles.menuItemText}>O Aplikacji</Text>
@@ -197,7 +197,7 @@ export default function ProfileScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => router.push('https://support.example.com')}>
+          onPress={() => router.push('/account/feedback')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="chatbox-outline" size={24} color="#fff" />
             <Text style={styles.menuItemText}>Prześlij Opinię</Text>
