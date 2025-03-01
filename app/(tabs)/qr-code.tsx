@@ -37,7 +37,10 @@ export default function QRCodeScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView 
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}
@@ -221,5 +224,8 @@ const styles = StyleSheet.create({
   retryButtonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  contentContainer: {
+    paddingBottom: 90,
   },
 });

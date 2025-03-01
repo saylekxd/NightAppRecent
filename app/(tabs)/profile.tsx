@@ -122,7 +122,10 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView 
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}
@@ -474,5 +477,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 20,
     elevation: 15,
+  },
+  contentContainer: {
+    paddingBottom: 90,
   },
 });

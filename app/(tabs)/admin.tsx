@@ -108,6 +108,7 @@ export default function DashboardScreen() {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.container}
+        contentContainerStyle={styles.contentContainer}
       >
         <LinearGradient
           colors={['#1a1a1a', '#000']}
@@ -493,5 +494,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     lineHeight: 20,
+  },
+  contentContainer: {
+    paddingBottom: 90,
   },
 });
