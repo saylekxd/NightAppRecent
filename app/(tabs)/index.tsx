@@ -41,6 +41,9 @@ export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(20)).current;
   
+  // Add scrollY animation value for header animation
+  const scrollY = useRef(new Animated.Value(0)).current;
+  
   // Component-specific animations - using a single animation controller for better synchronization
   const contentAnim = useRef(new Animated.Value(0)).current;
 
@@ -206,17 +209,14 @@ export default function HomeScreen() {
         colors={['#1a1a1a', '#000']}
         style={styles.background}
       />
-      <Animated.View style={{
-        opacity: contentAnim,
-        transform: [{ 
-          translateY: contentAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-10, 0]
-          })
-        }]
-      }}>
-        <Header fullName={profile?.full_name} username={profile?.username} />
-      </Animated.View>
+      
+      <View style={styles.headerContainer}>
+        <Header 
+          fullName={profile?.full_name} 
+          username={profile?.username} 
+          scrollY={scrollY}
+        />
+      </View>
       
       <Animated.ScrollView
         style={styles.scrollContent}
@@ -230,37 +230,44 @@ export default function HomeScreen() {
             colors={["#ff3b7f"]}
           />
         }
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
       >
-        <Animated.View style={{
-          opacity: contentAnim,
-          transform: [{ 
-            translateY: contentAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [20, 0]
-            })
-          }]
-        }}>
-          <PointsCard
-            points={profile?.points || 0}
-            currentRank={currentRank}
-            pointsToNext={pointsToNext}
-            onRefresh={loadData}
-            isLoading={refreshing}
-          />
+        <View style={{ paddingTop: 200 }}>
+          <Animated.View style={{
+            opacity: contentAnim,
+            transform: [{ 
+              translateY: contentAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [20, 0]
+              })
+            }]
+          }}>
+            <PointsCard
+              points={profile?.points || 0}
+              currentRank={currentRank}
+              pointsToNext={pointsToNext}
+              onRefresh={loadData}
+              isLoading={refreshing}
+            />
+            
+            <CommunityPosts
+              posts={posts}
+              newPost={newPost}
+              posting={posting}
+              onNewPostChange={setNewPost}
+              onSubmitPost={handlePost}
+              onLike={handleLike}
+            />
           
-          <CommunityPosts
-            posts={posts}
-            newPost={newPost}
-            posting={posting}
-            onNewPostChange={setNewPost}
-            onSubmitPost={handlePost}
-            onLike={handleLike}
-          />
-        
-          <Events events={events} />
-        
-          <Activities activities={activities} />
-        </Animated.View>
+            <Events events={events} />
+          
+            <Activities activities={activities} />
+          </Animated.View>
+        </View>
       </Animated.ScrollView>
     </View>
   );
@@ -277,6 +284,13 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: '100%',
+  },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   scrollContent: {
     flex: 1,

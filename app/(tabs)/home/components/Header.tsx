@@ -1,12 +1,14 @@
 import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 import { useRef, useEffect } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface HeaderProps {
   fullName: string;
   username: string;
+  scrollY?: Animated.Value;
 }
 
-export function Header({ fullName, username }: HeaderProps) {
+export function Header({ fullName, username, scrollY = new Animated.Value(0) }: HeaderProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -25,13 +27,27 @@ export function Header({ fullName, username }: HeaderProps) {
     ]).start();
   }, []);
 
+  const headerTranslateY = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, -20],
+    extrapolate: 'clamp'
+  });
+
   return (
-    <View style={styles.header}>
+    <Animated.View 
+      style={[
+        styles.header,
+        { transform: [{ translateY: headerTranslateY }] }
+      ]}
+    >
       <Animated.Image
         source={{ uri: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/shine%20safe%20tonight%20(1).png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvc2hpbmUgc2FmZSB0b25pZ2h0ICgxKS5wbmciLCJpYXQiOjE3NDA3NjY3ODAsImV4cCI6MTg5ODQ0Njc4MH0.nJIWVVaEZooPIMyiDjO1L08yuPOws6hiFTcRMhasH24' }}
         style={[styles.headerImage, { transform: [{ scale: 1.05 }] }]}
       />
-      <View style={styles.overlay} />
+      <LinearGradient
+        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.7)']}
+        style={styles.overlay}
+      />
       <Animated.View 
         style={[
           styles.headerContent,
@@ -44,7 +60,7 @@ export function Header({ fullName, username }: HeaderProps) {
         <Text style={styles.welcomeText}>Witaj ponownie,</Text>
         <Text style={styles.nameText}>{fullName || username}</Text>
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -62,8 +78,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7))',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   headerContent: {
     position: 'absolute',
