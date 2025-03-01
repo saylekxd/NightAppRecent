@@ -27,6 +27,7 @@ export default function AdminLayout() {
       <Stack.Screen name="scan" />
       <Stack.Screen name="redeem" />
       <Stack.Screen name="dashboard" />
+      <Stack.Screen name="notifications-manager" />
     </Stack>
   );
 }

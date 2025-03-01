@@ -35,12 +35,6 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
-        name="privacy"
-        options={{
-          title: 'Privacy & Security',
-        }}
-      />
-      <Stack.Screen
         name="avatar"
         options={{
           title: 'Choose Avatar',

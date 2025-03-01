@@ -110,6 +110,21 @@ export default function AdminDashboardScreen() {
             </Pressable>
           </Link>
 
+          <Link href="/(admin)/notifications-manager" asChild>
+            <Pressable style={styles.card}>
+              <View style={styles.cardIcon}>
+                <Ionicons name="notifications" size={32} color="#ff3b7f" />
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>Zarządzaj Powiadomieniami</Text>
+                <Text style={styles.cardDescription}>
+                  Wysyłaj powiadomienia do użytkowników
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color="#666" />
+            </Pressable>
+          </Link>
+
           <View style={styles.statsContainer}>
             <View style={styles.statsHeader}>
               <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>

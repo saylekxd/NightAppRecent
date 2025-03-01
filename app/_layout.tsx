@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 import { getSession } from '@/lib/auth';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '@/lib/notifications';
 
 declare global {
   interface Window {
@@ -45,14 +47,18 @@ export default function RootLayout() {
   }, [segments]);
 
   return (
-    <View style={styles.container}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="light" />
-    </View>
+    <>
+      <View style={styles.container}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="notifications" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="light" />
+      </View>
+      <Toast config={toastConfig} />
+    </>
   );
 }
 

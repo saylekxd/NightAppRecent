@@ -1,21 +1,69 @@
-import { View, Text, StyleSheet, Switch, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { getNotificationPreferences, updateNotificationPreferences } from '@/lib/notifications';
+
+interface NotificationSettings {
+  newEvents: boolean;
+  pointsEarned: boolean;
+  rewardAvailable: boolean;
+  specialOffers: boolean;
+  newsletter: boolean;
+}
 
 export default function NotificationsScreen() {
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<NotificationSettings>({
     newEvents: true,
     pointsEarned: true,
     rewardAvailable: true,
     specialOffers: false,
     newsletter: false,
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const toggleSetting = (key: keyof typeof settings) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+  useEffect(() => {
+    loadPreferences();
+  }, []);
+
+  const loadPreferences = async () => {
+    try {
+      setLoading(true);
+      const prefs = await getNotificationPreferences();
+      
+      // Ensure we have all the required properties with defaults
+      const typedPrefs: NotificationSettings = {
+        newEvents: prefs.newEvents ?? true,
+        pointsEarned: prefs.pointsEarned ?? true,
+        rewardAvailable: prefs.rewardAvailable ?? true,
+        specialOffers: prefs.specialOffers ?? false,
+        newsletter: prefs.newsletter ?? false,
+      };
+      
+      setSettings(typedPrefs);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load preferences');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSetting = async (key: keyof typeof settings) => {
+    try {
+      const newSettings = {
+        ...settings,
+        [key]: !settings[key],
+      };
+      
+      setSettings(newSettings);
+      await updateNotificationPreferences(newSettings);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update preferences');
+      // Revert the change if it failed
+      loadPreferences();
+    }
   };
 
   return (
@@ -26,6 +74,12 @@ export default function NotificationsScreen() {
       />
 
       <ScrollView style={styles.content}>
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Push Notifications</Text>
           
@@ -150,5 +204,17 @@ const styles = StyleSheet.create({
   settingDescription: {
     fontSize: 14,
     color: '#999',
+  },
+  errorContainer: {
+    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+    padding: 15,
+    margin: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 59, 48, 0.3)',
+  },
+  errorText: {
+    color: '#ef4444',
+    textAlign: 'center',
   },
 });

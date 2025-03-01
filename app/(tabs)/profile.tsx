@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,8 @@ import { router } from 'expo-router';
 import { getUserRank, getPointsToNextRank, Rank } from '@/lib/ranks';
 import { getTransactionHistory, Transaction } from '@/lib/points';
 import { ProfileSkeleton } from '@/app/components/SkeletonLoader';
+import { NotificationBadge } from '@/app/components/NotificationBadge';
+import { createSampleNotifications } from '@/lib/notifications';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
@@ -20,6 +22,11 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     loadProfile();
+    
+    // Create sample notifications for testing
+    // This should be removed in production
+    createSampleNotifications()
+      .catch(console.error);
   }, []);
 
   const loadProfile = async () => {
@@ -71,6 +78,10 @@ export default function ProfileScreen() {
         colors={['#1a1a1a', '#000']}
         style={styles.background}
       />
+      
+      <View style={styles.headerControls}>
+        <View style={{ flex: 1 }} />
+      </View>
       
       <View style={styles.header}>
         <Pressable
@@ -143,30 +154,13 @@ export default function ProfileScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => router.push('/account/notifications')}>
+          onPress={() => router.push('/account/notifications-list')}>
           <View style={styles.menuItemLeft}>
-            <Ionicons name="notifications-outline" size={24} color="#fff" />
+            <View style={{ position: 'relative' }}>
+              <Ionicons name="notifications-outline" size={24} color="#fff" />
+              <NotificationBadge />
+            </View>
             <Text style={styles.menuItemText}>Powiadomienia</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color="#666" />
-        </Pressable>
-
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => router.push('/account/preferences')}>
-          <View style={styles.menuItemLeft}>
-            <Ionicons name="settings-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Preferencje</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color="#666" />
-        </Pressable>
-
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => router.push('/account/privacy')}>
-          <View style={styles.menuItemLeft}>
-            <Ionicons name="shield-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Prywatność i Bezpieczeństwo</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -226,6 +220,18 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: '100%',
+  },
+  headerControls: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   header: {
     padding: 20,
