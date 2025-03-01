@@ -10,6 +10,10 @@ export default function EditProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{
+    fullName?: string;
+    username?: string;
+  }>({});
 
   useEffect(() => {
     loadProfile();
@@ -28,7 +32,50 @@ export default function EditProfileScreen() {
     }
   };
 
+  const validateForm = (): boolean => {
+    const errors: {
+      fullName?: string;
+      username?: string;
+    } = {};
+    
+    // Validate full name (max 16 characters)
+    if (fullName.length > 16) {
+      errors.fullName = 'Full name cannot exceed 16 characters';
+    }
+    
+    // Validate username (required field)
+    if (!username.trim()) {
+      errors.username = 'Username is required';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFullNameChange = (text: string) => {
+    // Limit input to 16 characters
+    if (text.length <= 16) {
+      setFullName(text);
+    }
+    // Clear validation error if it exists
+    if (validationErrors.fullName) {
+      setValidationErrors(prev => ({ ...prev, fullName: undefined }));
+    }
+  };
+
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+    // Clear validation error if it exists
+    if (validationErrors.username) {
+      setValidationErrors(prev => ({ ...prev, username: undefined }));
+    }
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    
     try {
       setError(null);
       setSaving(true);
@@ -84,24 +131,32 @@ export default function EditProfileScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Full Name</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, validationErrors.fullName && styles.inputError]}
             value={fullName}
-            onChangeText={setFullName}
+            onChangeText={handleFullNameChange}
             placeholder="Enter your full name"
             placeholderTextColor="#666"
+            maxLength={16}
           />
+          {validationErrors.fullName && (
+            <Text style={styles.validationErrorText}>{validationErrors.fullName}</Text>
+          )}
+          <Text style={styles.characterCount}>{fullName.length}/16</Text>
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Username</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, validationErrors.username && styles.inputError]}
             value={username}
-            onChangeText={setUsername}
+            onChangeText={handleUsernameChange}
             placeholder="Enter your username"
             placeholderTextColor="#666"
             autoCapitalize="none"
           />
+          {validationErrors.username && (
+            <Text style={styles.validationErrorText}>{validationErrors.username}</Text>
+          )}
         </View>
       </View>
     </View>
@@ -160,6 +215,7 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 20,
+    position: 'relative',
   },
   label: {
     color: '#fff',
@@ -173,6 +229,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     borderWidth: 1,
     borderColor: '#333',
+  },
+  inputError: {
+    borderColor: '#F44336',
+  },
+  validationErrorText: {
+    color: '#F44336',
+    fontSize: 14,
+    marginTop: 5,
+  },
+  characterCount: {
+    color: '#999',
+    fontSize: 12,
+    textAlign: 'right',
+    marginTop: 5,
   },
   errorContainer: {
     margin: 20,

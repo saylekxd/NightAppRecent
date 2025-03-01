@@ -8,15 +8,63 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{
+    fullName?: string;
+    username?: string;
+  }>({});
+
+  const validateForm = (): boolean => {
+    const errors: {
+      fullName?: string;
+      username?: string;
+    } = {};
+    
+    // Validate full name (max 16 characters)
+    if (fullName.length > 16) {
+      errors.fullName = 'Full name cannot exceed 16 characters';
+    }
+    
+    // Validate username (required field)
+    if (!username.trim()) {
+      errors.username = 'Username is required';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFullNameChange = (text: string) => {
+    // Limit input to 16 characters
+    if (text.length <= 16) {
+      setFullName(text);
+    }
+    // Clear validation error if it exists
+    if (validationErrors.fullName) {
+      setValidationErrors(prev => ({ ...prev, fullName: undefined }));
+    }
+  };
+
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+    // Clear validation error if it exists
+    if (validationErrors.username) {
+      setValidationErrors(prev => ({ ...prev, username: undefined }));
+    }
+  };
 
   const handleSignUp = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    
     try {
       setError(null);
       setIsLoading(true);
 
-      const data: SignUpData = { email, password, fullName };
+      const data: SignUpData = { email, password, fullName, username };
       signUpSchema.parse(data);
       
       await signUp(data);
@@ -43,13 +91,34 @@ export default function SignUpScreen() {
           <Text style={styles.error}>{error}</Text>
         )}
 
-        <TextInput
-          style={styles.input}
-          placeholder="Imię i Nazwisko"
-          placeholderTextColor="#666"
-          value={fullName}
-          onChangeText={setFullName}
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, validationErrors.fullName && styles.inputError]}
+            placeholder="Imię i Nazwisko"
+            placeholderTextColor="#666"
+            value={fullName}
+            onChangeText={handleFullNameChange}
+            maxLength={16}
+          />
+          {validationErrors.fullName && (
+            <Text style={styles.validationErrorText}>{validationErrors.fullName}</Text>
+          )}
+          <Text style={styles.characterCount}>{fullName.length}/16</Text>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, validationErrors.username && styles.inputError]}
+            placeholder="Nazwa użytkownika"
+            placeholderTextColor="#666"
+            value={username}
+            onChangeText={handleUsernameChange}
+            autoCapitalize="none"
+          />
+          {validationErrors.username && (
+            <Text style={styles.validationErrorText}>{validationErrors.username}</Text>
+          )}
+        </View>
 
         <TextInput
           style={styles.input}
@@ -123,14 +192,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 59, 127, 0.1)',
     borderRadius: 8,
   },
+  inputContainer: {
+    marginBottom: 15,
+    position: 'relative',
+  },
   input: {
     backgroundColor: '#1a1a1a',
     borderRadius: 8,
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 5,
     color: '#fff',
     borderWidth: 1,
     borderColor: '#333',
+  },
+  inputError: {
+    borderColor: '#F44336',
+  },
+  validationErrorText: {
+    color: '#F44336',
+    fontSize: 14,
+    marginTop: 2,
+  },
+  characterCount: {
+    color: '#999',
+    fontSize: 12,
+    textAlign: 'right',
   },
   passwordRequirements: {
     color: '#fff',

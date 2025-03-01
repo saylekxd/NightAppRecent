@@ -13,8 +13,16 @@ import { NotificationBadge } from '@/app/components/NotificationBadge';
 import { createSampleNotifications } from '@/lib/notifications';
 import { GalleryImagePicker } from '@/app/components/GalleryImagePicker';
 
+// Define a type for the profile data
+interface ProfileData {
+  full_name?: string;
+  username?: string;
+  avatar_url?: string;
+  [key: string]: any; // For other properties
+}
+
 export default function ProfileScreen() {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -94,10 +102,10 @@ export default function ProfileScreen() {
         console.error('Error loading profile:', loadError);
         
         // Fall back to manual state update if profile loading fails
-        setProfile(prev => ({
+        setProfile((prev: ProfileData | null) => ({
           ...prev,
           avatar_url: imageUrl
-        } as typeof prev));
+        }));
         console.log('Applied fallback image update to state');
       }
     } catch (err) {
@@ -260,7 +268,7 @@ export default function ProfileScreen() {
           />
           <View style={styles.modalContainer}>
             <GalleryImagePicker
-              currentAvatarUrl={profile?.avatar_url}
+              currentAvatarUrl={profile?.avatar_url || null}
               onImageSelected={handleImageSelected}
               onClose={() => setShowGalleryPicker(false)}
             />
