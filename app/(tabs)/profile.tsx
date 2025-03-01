@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { getTransactionHistory, Transaction } from '@/lib/points';
 import { ProfileSkeleton } from '@/app/components/SkeletonLoader';
 import { NotificationBadge } from '@/app/components/NotificationBadge';
 import { createSampleNotifications } from '@/lib/notifications';
+import { GalleryImagePicker } from '@/app/components/GalleryImagePicker';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
@@ -19,6 +20,7 @@ export default function ProfileScreen() {
   const [error, setError] = useState<string | null>(null);
   const [currentRank, setCurrentRank] = useState<Rank | null>(null);
   const [pointsToNext, setPointsToNext] = useState<number>(0);
+  const [showGalleryPicker, setShowGalleryPicker] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -68,6 +70,45 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleImageSelected = async (imageUrl: string) => {
+    try {
+      console.log('Image selected, updating profile...', imageUrl);
+      
+      // Close the modal first to prevent UI issues
+      setShowGalleryPicker(false);
+      
+      // Small delay to ensure the modal is closed before updating UI
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Set loading state
+      setLoading(true);
+      
+      // Wait a bit longer to ensure the UI has time to update
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      try {
+        // Reload profile to reflect changes
+        await loadProfile();
+        console.log('Profile refreshed with new image');
+      } catch (loadError) {
+        console.error('Error loading profile:', loadError);
+        
+        // Fall back to manual state update if profile loading fails
+        setProfile(prev => ({
+          ...prev,
+          avatar_url: imageUrl
+        } as typeof prev));
+        console.log('Applied fallback image update to state');
+      }
+    } catch (err) {
+      console.error('Error handling image selection:', err);
+      setError('Failed to update profile image. Please try again.');
+    } finally {
+      // Always make sure loading state is reset
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return <ProfileSkeleton />;
   }
@@ -85,7 +126,7 @@ export default function ProfileScreen() {
       
       <View style={styles.header}>
         <Pressable
-          onPress={() => router.push('/account/avatar')}
+          onPress={() => setShowGalleryPicker(true)}
           style={styles.avatarContainer}>
           <Image
             source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800' }}
@@ -205,6 +246,27 @@ export default function ProfileScreen() {
         onPress={handleSignOut}>
         <Text style={styles.signOutText}>Wyloguj się</Text>
       </Pressable>
+
+      {/* Gallery Picker Modal */}
+      <Modal
+        transparent={true}
+        visible={showGalleryPicker}
+        animationType="slide"
+        onRequestClose={() => setShowGalleryPicker(false)}>
+        <View style={styles.modalOverlay}>
+          <Pressable 
+            style={styles.modalBackdrop} 
+            onPress={() => setShowGalleryPicker(false)} 
+          />
+          <View style={styles.modalContainer}>
+            <GalleryImagePicker
+              currentAvatarUrl={profile?.avatar_url}
+              onImageSelected={handleImageSelected}
+              onClose={() => setShowGalleryPicker(false)}
+            />
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -376,5 +438,33 @@ const styles = StyleSheet.create({
   loadingText: {
     color: '#fff',
     fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  modalBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modalContainer: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 15,
   },
 });
