@@ -11,6 +11,8 @@ export function Activities({ activities }: ActivitiesProps) {
   const fadeAnim = useRef(activities.map(() => new Animated.Value(0))).current;
 
   useEffect(() => {
+    if (activities.length === 0) return;
+    
     const animations = fadeAnim.map((anim, i) => {
       return Animated.timing(anim, {
         toValue: 1,
@@ -26,52 +28,62 @@ export function Activities({ activities }: ActivitiesProps) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Ostatnia Aktywność</Text>
+        <Text style={styles.sectionTitle}>Ostatnia aktywność</Text>
       </View>
       
-      <View style={styles.activitiesContainer}>
-        {activities.slice(0, 5).map((activity, index) => (
-          <Animated.View 
-            key={activity.id} 
-            style={[
-              styles.activityItem,
-              { opacity: fadeAnim[index], transform: [{ translateY: fadeAnim[index].interpolate({
-                inputRange: [0, 1],
-                outputRange: [20, 0]
-              })}] }
-            ]}
-          >
-            <View style={styles.activityIconContainer}>
-              <View style={[
-                styles.activityIcon,
-                { backgroundColor: activity.type === 'earn' ? 'rgba(255, 59, 127, 0.1)' : 'rgba(204, 204, 204, 0.1)' }
-              ]}>
-                <Ionicons 
-                  name={activity.type === 'earn' ? 'arrow-up' : 'arrow-down'} 
-                  size={16} 
-                  color={activity.type === 'earn' ? '#ff3b7f' : '#cccccc'} 
-                />
+      {activities.length === 0 ? (
+        <View style={styles.emptyStateContainer}>
+          <Ionicons name="qr-code-outline" size={48} color="#ff3b7f" style={styles.emptyStateIcon} />
+          <Text style={styles.emptyStateTitle}>Brak aktywności</Text>
+          <Text style={styles.emptyStateMessage}>
+            Zeskanuj swój pierwszy kod QR, aby rozpocząć zbieranie punktów.
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.activitiesContainer}>
+          {activities.slice(0, 5).map((activity, index) => (
+            <Animated.View 
+              key={activity.id} 
+              style={[
+                styles.activityItem,
+                { opacity: fadeAnim[index], transform: [{ translateY: fadeAnim[index].interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0]
+                })}] }
+              ]}
+            >
+              <View style={styles.activityIconContainer}>
+                <View style={[
+                  styles.activityIcon,
+                  { backgroundColor: activity.type === 'earn' ? 'rgba(255, 59, 127, 0.1)' : 'rgba(204, 204, 204, 0.1)' }
+                ]}>
+                  <Ionicons 
+                    name={activity.type === 'earn' ? 'arrow-up' : 'arrow-down'} 
+                    size={16} 
+                    color={activity.type === 'earn' ? '#ff3b7f' : '#cccccc'} 
+                  />
+                </View>
               </View>
-            </View>
-            <View style={styles.activityInfo}>
-              <Text style={styles.activityAction}>{activity.description}</Text>
-              <Text style={styles.activityDate}>
-                {new Date(activity.created_at).toLocaleDateString('pl-PL', {
-                  weekday: 'short',
-                  month: 'short',
-                  day: 'numeric',
-                })}
+              <View style={styles.activityInfo}>
+                <Text style={styles.activityAction}>{activity.description}</Text>
+                <Text style={styles.activityDate}>
+                  {new Date(activity.created_at).toLocaleDateString('pl-PL', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </Text>
+              </View>
+              <Text style={[
+                styles.activityPoints,
+                { color: activity.type === 'earn' ? '#ff3b7f' : '#cccccc' }
+              ]}>
+                {activity.type === 'earn' ? '+' : '-'}{activity.amount}
               </Text>
-            </View>
-            <Text style={[
-              styles.activityPoints,
-              { color: activity.type === 'earn' ? '#ff3b7f' : '#cccccc' }
-            ]}>
-              {activity.type === 'earn' ? '+' : '-'}{activity.amount}
-            </Text>
-          </Animated.View>
-        ))}
-      </View>
+            </Animated.View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -142,5 +154,35 @@ const styles = StyleSheet.create({
   activityPoints: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  emptyStateContainer: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 15,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(51, 51, 51, 0.5)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateIcon: {
+    marginBottom: 16,
+  },
+  emptyStateTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  emptyStateMessage: {
+    color: '#fff',
+    opacity: 0.7,
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 22,
   },
 }); 

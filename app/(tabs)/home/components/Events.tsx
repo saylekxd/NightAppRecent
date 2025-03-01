@@ -14,7 +14,7 @@ export function Events({ events }: EventsProps) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Nadchodzące Wydarzenia</Text>
+        <Text style={styles.sectionTitle}>Nadchodzące wydarzenia</Text>
       </View>
       
       <Animated.ScrollView 

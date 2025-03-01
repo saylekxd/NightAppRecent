@@ -304,7 +304,7 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
       />
       <View style={styles.pointsHeader}>
         <View>
-          <Text style={styles.pointsLabel}>Twoje Punkty</Text>
+          <Text style={styles.pointsLabel}>Twoje punkty</Text>
           <Animated.Text 
             style={[
               styles.pointsValue,
