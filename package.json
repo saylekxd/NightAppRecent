@@ -59,7 +59,8 @@
     "react-native-webview": "13.12.5",
     "tailwind-merge": "^3.0.1",
     "zod": "^3.22.4",
-    "expo-file-system": "~18.0.11"
+    "expo-file-system": "~18.0.11",
+    "@react-native-community/netinfo": "11.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

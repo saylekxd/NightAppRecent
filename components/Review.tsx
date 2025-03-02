@@ -97,17 +97,17 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
 
   const handleSubmit = async () => {
     if (!selectedMood) {
-      Alert.alert('Error', 'Please select a mood before submitting');
+      Alert.alert('Error', 'Proszę wybrać nastrój przed wysłaniem opinii');
       return;
     }
 
     if (!user) {
-      Alert.alert('Error', 'You must be logged in to submit a review');
+      Alert.alert('Error', 'Aby dodać recenzję, musisz być zalogowany');
       return;
     }
 
     if (!canSubmit) {
-      Alert.alert('Error', blockReason || 'You cannot submit a review at this time');
+      Alert.alert('Error', blockReason || 'Obecnie nie możesz dodać recenzji');
       return;
     }
 
@@ -132,14 +132,14 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
       setSelectedMood(null);
       setComment('');
       setCanSubmit(false);
-      setBlockReason('You have already submitted a review in the last 24 hours');
+      setBlockReason('Już dodałeś recenzję w ciągu ostatnich 24 godzin');
       
       if (onReviewSubmitted) {
         onReviewSubmitted();
       }
     } catch (error) {
       console.error('Error submitting review:', error);
-      Alert.alert('Error', 'Failed to submit review. Please try again.');
+      Alert.alert('Error', 'Nie udało się dodać recenzji. Proszę spróbować ponownie');
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +149,7 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#ff3b7f" />
-        <Text style={styles.loadingText}>Checking your review eligibility...</Text>
+        <Text style={styles.loadingText}>Sprawdzamy, czy możesz dodać recenzję...</Text>
       </View>
     );
   }
@@ -177,10 +177,10 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
             />
           </View>
           <Text style={styles.successMessage}>
-            Your opinion matters to us and helps us improve our services.
+            Twoja opinia jest dla nas ważna i pomaga nam ulepszać nasze usługi!
           </Text>
           <Text style={styles.successSubtext}>
-            You'll be able to submit another review after 24 hours.
+            Będziesz mógł dodać kolejną recenzję za 24 godziny
           </Text>
         </Animated.View>
       </View>
@@ -202,13 +202,13 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
             ]}
           >
             <Ionicons name="checkmark-circle" size={50} color="#ff3b7f" />
-            <Text style={styles.successTitle}>Thank You!</Text>
+            <Text style={styles.successTitle}>Dziękujemy!</Text>
             <Text style={styles.successMessage}>
-              You've already shared your feedback with us in the last 24 hours.
-              We appreciate your input and use it to improve our services!
+              Już podzieliłeś się z nami swoją opinią w ciągu ostatnich 24 godzin.
+Dziękujemy za Twój wkład – pomagasz nam ulepszać nasze usługi!
             </Text>
             <Text style={styles.successSubtext}>
-              You'll be able to submit another review after 24 hours from your last submission.
+              Będziesz mógł dodać kolejną recenzję 24 godziny po ostatnim wypełnieniu
             </Text>
           </Animated.View>
         </View>
@@ -218,12 +218,12 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
         <View style={styles.container}>
           <View style={styles.blockedContainer}>
             <Ionicons name="time-outline" size={40} color="#ff3b7f" />
-            <Text style={styles.blockedTitle}>Review Not Available Yet</Text>
+            <Text style={styles.blockedTitle}>Ankieta jeszcze niedostępna</Text>
             <Text style={styles.blockedMessage}>
               {blockReason}
             </Text>
             <Text style={styles.blockedSubtext}>
-              Visit us again soon to share your experience!
+              Odwiedź nas wkrótce, aby podzielić się swoim doświadczeniem!
             </Text>
           </View>
         </View>
@@ -234,7 +234,7 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
         <View style={styles.container}>
           <View style={styles.blockedContainer}>
             <Ionicons name="lock-closed" size={40} color="#ff3b7f" />
-            <Text style={styles.blockedTitle}>Review Unavailable</Text>
+            <Text style={styles.blockedTitle}>Ankieta niedostępna</Text>
             <Text style={styles.blockedMessage}>{blockReason}</Text>
           </View>
         </View>
@@ -244,7 +244,7 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>How was your experience today?</Text>
+      <Text style={styles.title}>Jak Ci się podoba impreza?</Text>
       
       <View style={styles.moodContainer}>
         {moods.map((mood) => (
@@ -294,7 +294,7 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
         disabled={!selectedMood || isSubmitting}
       >
         <Text style={styles.submitButtonText}>
-          {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+          {isSubmitting ? 'Zatwierdzanie...' : 'Zatwierdź opinię'}
         </Text>
       </TouchableOpacity>
     </View>

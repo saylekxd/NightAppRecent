@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, Linking, Image } from 'react-native';
 import { useVideoPlayer, VideoView, VideoSource } from 'expo-video';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,6 +20,10 @@ export default function OnboardingScreen() {
 
   const handleGetStarted = () => {
     router.push('/sign-in');
+  };
+  
+  const openDeveloperWebsite = () => {
+    Linking.openURL('https://swtlabs.com');
   };
 
   return (
@@ -45,6 +49,15 @@ export default function OnboardingScreen() {
             onPress={handleGetStarted}>
             <Text style={styles.buttonText}>Rozpocznij</Text>
           </Pressable>
+          
+          <TouchableOpacity style={styles.brandContainer} onPress={openDeveloperWebsite}>
+            <Text style={styles.developerText}>Developed by</Text>
+            <Image 
+              source={require('@/assets/images/swtlabslogo.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -91,5 +104,21 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  brandContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  developerText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 12,
+    marginRight: 8,
+  },
+  brandLogo: {
+    width: 120,
+    height: 30,
+    opacity: 0.6,
   },
 }); 

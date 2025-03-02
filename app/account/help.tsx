@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     question: 'Jak zmienić dane osobowe?',
-    answer: 'Aby zmienić dane osobowe, przejdź do sekcji Profil, a następnie wybierz opcję "Edytuj Profil". Tam możesz zaktualizować swoje dane.'
+    answer: 'Aby zmienić dane osobowe, przejdź do sekcji Profil, a następnie wybierz opcję "Edytuj profil". Tam możesz zaktualizować swoje dane.'
   },
   {
     question: 'Czy mogę przenieść moje punkty na inne konto?',
@@ -108,7 +108,7 @@ export default function HelpScreen() {
       
       <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Często Zadawane Pytania</Text>
+          <Text style={styles.sectionTitle}>Często zadawane pytania</Text>
           
           {faqs.map((faq, index) => (
             <Pressable 
@@ -133,7 +133,7 @@ export default function HelpScreen() {
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Kontakt z Obsługą</Text>
+          <Text style={styles.sectionTitle}>Kontakt z obsługą</Text>
           
           <TextInput
             style={[styles.messageInput, { minHeight: 120 }]}
@@ -172,27 +172,27 @@ export default function HelpScreen() {
             {isSubmitting ? (
               <ActivityIndicator color="#fff" size="small" />
             ) : (
-              <Text style={styles.contactButtonText}>Wyślij Wiadomość</Text>
+              <Text style={styles.contactButtonText}>Wyślij wiadomość</Text>
             )}
           </Pressable>
           
           <View style={styles.contactInfo}>
             <Text style={styles.contactInfoText}>Lub skontaktuj się z nami bezpośrednio:</Text>
             
-            <Pressable 
+            {/* <Pressable 
               style={styles.contactMethod}
               onPress={callSupport}
             >
               <Ionicons name="call-outline" size={24} color="#ff3b7f" />
               <Text style={styles.contactMethodText}>+48 123 456 789</Text>
-            </Pressable>
+            </Pressable> */}
             
             <Pressable 
               style={styles.contactMethod}
               onPress={emailSupport}
             >
               <Ionicons name="mail-outline" size={24} color="#ff3b7f" />
-              <Text style={styles.contactMethodText}>support@example.com</Text>
+              <Text style={styles.contactMethodText}>noctoklub@gmail.com</Text>
             </Pressable>
           </View>
         </View>

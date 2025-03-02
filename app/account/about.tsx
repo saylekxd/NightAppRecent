@@ -10,7 +10,7 @@ export default function AboutScreen() {
   const buildNumber = Constants.expoConfig?.ios?.buildNumber || Constants.expoConfig?.android?.versionCode || '1';
   
   const openWebsite = () => {
-    Linking.openURL('https://example.com');
+    Linking.openURL('https://www.nocklub.com');
   };
   
   const openTermsOfService = () => {
@@ -22,11 +22,15 @@ export default function AboutScreen() {
   };
   
   const openInstagram = () => {
-    Linking.openURL('https://instagram.com/example');
+    Linking.openURL('https://www.instagram.com/nocklub_rybnik');
   };
   
   const openFacebook = () => {
-    Linking.openURL('https://facebook.com/example');
+    Linking.openURL('https://www.facebook.com/nocklub.rybnik');
+  };
+
+  const openDeveloperWebsite = () => {
+    Linking.openURL('https://swtlabs.pl');
   };
 
   return (
@@ -52,31 +56,31 @@ export default function AboutScreen() {
           <Text style={styles.sectionTitle}>O Nas</Text>
           <Text style={styles.descriptionText}>
             Night App to aplikacja lojalnościowa stworzona dla miłośników nocnego życia. 
-            Zbieraj punkty za wizyty w klubach, wymieniaj je na ekskluzywne nagrody i bądź 
+            Zbieraj punkty za wizyty w naszym klubie, wymieniaj je na ekskluzywne nagrody i bądź 
             na bieżąco z najlepszymi wydarzeniami w mieście.
           </Text>
           
           <Pressable style={styles.linkButton} onPress={openWebsite}>
-            <Text style={styles.linkButtonText}>Odwiedź Naszą Stronę</Text>
+            <Text style={styles.linkButtonText}>Odwiedź naszą stronę</Text>
           </Pressable>
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Regulaminy i Polityka</Text>
+          <Text style={styles.sectionTitle}>Regulaminy i polityka</Text>
           
           <Pressable style={styles.menuItem} onPress={openTermsOfService}>
-            <Text style={styles.menuItemText}>Regulamin Użytkowania</Text>
+            <Text style={styles.menuItemText}>Regulamin użytkowania</Text>
             <Ionicons name="arrow-forward" size={20} color="#666" />
           </Pressable>
           
           <Pressable style={styles.menuItem} onPress={openPrivacyPolicy}>
-            <Text style={styles.menuItemText}>Polityka Prywatności</Text>
+            <Text style={styles.menuItemText}>Polityka prywatności</Text>
             <Ionicons name="arrow-forward" size={20} color="#666" />
           </Pressable>
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Obserwuj Nas</Text>
+          <Text style={styles.sectionTitle}>Obserwuj nas</Text>
           
           <View style={styles.socialContainer}>
             <Pressable style={styles.socialButton} onPress={openInstagram}>
@@ -92,7 +96,15 @@ export default function AboutScreen() {
         </View>
         
         <View style={styles.creditsSection}>
-          <Text style={styles.copyrightText}>© 2024 Night App. Wszelkie prawa zastrzeżone.</Text>
+          <Pressable style={styles.developerInfo} onPress={openDeveloperWebsite}>
+            <Text style={styles.developerText}>Developed by</Text>
+            <Image 
+              source={require('@/assets/images/swtlabslogo.png')}
+              style={styles.developerLogo}
+              resizeMode="contain"
+            />
+          </Pressable>
+          <Text style={styles.copyrightText}>© 2025 Night App. Wszelkie prawa zastrzeżone.</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -185,8 +197,24 @@ const styles = StyleSheet.create({
     padding: 30,
     alignItems: 'center',
   },
+  developerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+    padding: 5,
+  },
+  developerText: {
+    color: '#888',
+    fontSize: 12,
+    marginRight: 8,
+  },
   copyrightText: {
     color: '#666',
     textAlign: 'center',
+  },
+  developerLogo: {
+    width: 150,
+    height: 40,
   },
 }); 

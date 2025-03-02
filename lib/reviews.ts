@@ -84,7 +84,7 @@ export async function canSubmitReview(): Promise<{ canSubmit: boolean; reason?: 
   if (!hasTransaction) {
     return { 
       canSubmit: false, 
-      reason: 'You need to have a transaction in the last 24 hours to submit a review' 
+      reason: ' Aby dodać recenzję, wymagane jest zeskanowanie kodu QR w ciągu ostatnich 24h' 
     };
   }
 
@@ -92,7 +92,7 @@ export async function canSubmitReview(): Promise<{ canSubmit: boolean; reason?: 
   if (hasReview) {
     return { 
       canSubmit: false, 
-      reason: 'You have already submitted a review in the last 24 hours' 
+      reason: 'Już dodałeś recenzję w ciągu ostatnich 24h' 
     };
   }
 

@@ -116,7 +116,7 @@ export default function AdminDashboardScreen() {
                 <Ionicons name="notifications" size={32} color="#ff3b7f" />
               </View>
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Zarządzaj Powiadomieniami</Text>
+                <Text style={styles.cardTitle}>Zarządzaj powiadomieniami</Text>
                 <Text style={styles.cardDescription}>
                   Wysyłaj powiadomienia do użytkowników
                 </Text>
@@ -127,7 +127,7 @@ export default function AdminDashboardScreen() {
 
           <View style={styles.statsContainer}>
             <View style={styles.statsHeader}>
-              <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
+              <Text style={styles.statsTitle}>Dzisiejsze statystyki</Text>
               <Pressable onPress={loadStats}>
                 <Text style={styles.refreshText}>Odśwież</Text>
               </Pressable>
@@ -140,11 +140,11 @@ export default function AdminDashboardScreen() {
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
-                <Text style={styles.statLabel}>Użyte Nagrody</Text>
+                <Text style={styles.statLabel}>Użyte nagrody</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
-                <Text style={styles.statLabel}>Przyznane Punkty</Text>
+                <Text style={styles.statLabel}>Przyznane punkty</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>

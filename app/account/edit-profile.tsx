@@ -3,16 +3,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { getProfile, updateProfile } from '@/lib/auth';
+import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '@/lib/supabase';
 
 export default function EditProfileScreen() {
   const [fullName, setFullName] = useState('');
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     fullName?: string;
-    username?: string;
   }>({});
 
   useEffect(() => {
@@ -24,28 +24,23 @@ export default function EditProfileScreen() {
       setError(null);
       const profile = await getProfile();
       setFullName(profile.full_name || '');
-      setUsername(profile.username || '');
+      
+      // Get user email from Supabase auth
+      const { data: { user } } = await supabase.auth.getUser();
+      setEmail(user?.email || '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 
   const validateForm = (): boolean => {
     const errors: {
       fullName?: string;
-      username?: string;
     } = {};
     
     // Validate full name (max 16 characters)
     if (fullName.length > 16) {
-      errors.fullName = 'Full name cannot exceed 16 characters';
-    }
-    
-    // Validate username (required field)
-    if (!username.trim()) {
-      errors.username = 'Username is required';
+      errors.fullName = 'Pełne imię nie może przekraczać 16 znaków.';
     }
     
     setValidationErrors(errors);
@@ -63,14 +58,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  const handleUsernameChange = (text: string) => {
-    setUsername(text);
-    // Clear validation error if it exists
-    if (validationErrors.username) {
-      setValidationErrors(prev => ({ ...prev, username: undefined }));
-    }
-  };
-
   const handleSave = async () => {
     if (!validateForm()) {
       return;
@@ -81,7 +68,6 @@ export default function EditProfileScreen() {
       setSaving(true);
       await updateProfile({
         full_name: fullName,
-        username,
       });
       router.back();
     } catch (err) {
@@ -91,14 +77,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -107,16 +85,14 @@ export default function EditProfileScreen() {
       />
       
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>Cancel</Text>
-        </Pressable>
-        <Text style={styles.title}>Edit Profile</Text>
+        
+        <Text style={styles.title}>Edytuj profil</Text>
         <Pressable
           onPress={handleSave}
           disabled={saving}
           style={[styles.saveButton, saving && styles.saveButtonDisabled]}>
           <Text style={styles.saveButtonText}>
-            {saving ? 'Saving...' : 'Save'}
+            {saving ? 'Zapisywanie...' : 'Zapisz'}
           </Text>
         </Pressable>
       </View>
@@ -134,7 +110,7 @@ export default function EditProfileScreen() {
             style={[styles.input, validationErrors.fullName && styles.inputError]}
             value={fullName}
             onChangeText={handleFullNameChange}
-            placeholder="Enter your full name"
+            placeholder="Wpisz swój nickname"
             placeholderTextColor="#666"
             maxLength={16}
           />
@@ -145,18 +121,11 @@ export default function EditProfileScreen() {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={[styles.input, validationErrors.username && styles.inputError]}
-            value={username}
-            onChangeText={handleUsernameChange}
-            placeholder="Enter your username"
-            placeholderTextColor="#666"
-            autoCapitalize="none"
-          />
-          {validationErrors.username && (
-            <Text style={styles.validationErrorText}>{validationErrors.username}</Text>
-          )}
+          <Text style={styles.label}>Email</Text>
+          <View style={[styles.input, styles.disabledInput]}>
+            <Text style={styles.emailText}>{email}</Text>
+          </View>
+          <Text style={styles.helperText}>Zmiana adresu email jest niemożliwa</Text>
         </View>
       </View>
     </View>
@@ -167,16 +136,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
   },
   header: {
     flexDirection: 'row',
@@ -229,6 +188,18 @@ const styles = StyleSheet.create({
     color: '#fff',
     borderWidth: 1,
     borderColor: '#333',
+  },
+  disabledInput: {
+    backgroundColor: '#111',
+    borderColor: '#222',
+  },
+  emailText: {
+    color: '#999',
+  },
+  helperText: {
+    color: '#999',
+    fontSize: 12,
+    marginTop: 5,
   },
   inputError: {
     borderColor: '#F44336',

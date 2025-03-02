@@ -25,7 +25,7 @@ export default function AccountLayout() {
       <Stack.Screen
         name="edit-profile"
         options={{
-          title: 'Edit Profile',
+          title: '',
         }}
       />
       <Stack.Screen

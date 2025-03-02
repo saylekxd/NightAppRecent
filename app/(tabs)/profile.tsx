@@ -173,12 +173,12 @@ export default function ProfileScreen() {
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-          <Text style={styles.statLabel}>Wizyty</Text>
+          <Text style={styles.statLabel}>Zeskanowane QR</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats?.active_rewards_count || 0}</Text>
-          <Text style={styles.statLabel}>Aktywne Nagrody</Text>
+          <Text style={styles.statLabel}>Aktywne nagrody</Text>
         </View>
       </View>
 
@@ -192,14 +192,14 @@ export default function ProfileScreen() {
       )}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Ustawienia Konta</Text>
+        <Text style={styles.sectionTitle}>Ustawienia konta</Text>
         
         <Pressable
           style={styles.menuItem}
           onPress={() => router.push('/account/edit-profile')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="person-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Edytuj Profil</Text>
+            <Text style={styles.menuItemText}>Edytuj profil</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -219,14 +219,14 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Pomoc i Informacje</Text>
+        <Text style={styles.sectionTitle}>Pomoc i informacje</Text>
 
         <Pressable
           style={styles.menuItem}
           onPress={() => router.push('/account/help')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="help-circle-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Pomoc i Wsparcie</Text>
+            <Text style={styles.menuItemText}>Pomoc i wsparcie</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -236,7 +236,7 @@ export default function ProfileScreen() {
           onPress={() => router.push('/account/about')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="information-circle-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>O Aplikacji</Text>
+            <Text style={styles.menuItemText}>O aplikacji</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>
@@ -246,7 +246,7 @@ export default function ProfileScreen() {
           onPress={() => router.push('/account/feedback')}>
           <View style={styles.menuItemLeft}>
             <Ionicons name="chatbox-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Prześlij Opinię</Text>
+            <Text style={styles.menuItemText}>Prześlij opinię</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#666" />
         </Pressable>

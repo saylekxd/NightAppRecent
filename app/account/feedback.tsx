@@ -15,9 +15,9 @@ export default function FeedbackScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const feedbackTypes = [
-    { id: 'general', label: 'Ogólna Opinia', icon: 'chatbubble-outline' },
-    { id: 'bug', label: 'Zgłoszenie Błędu', icon: 'bug-outline' },
-    { id: 'feature', label: 'Sugestia Funkcji', icon: 'bulb-outline' },
+    { id: 'general', label: 'Ogólna opinia', icon: 'chatbubble-outline' },
+    { id: 'bug', label: 'Zgłoszenie błędu', icon: 'bug-outline' },
+    { id: 'feature', label: 'Sugestia funkcji', icon: 'bulb-outline' },
     { id: 'other', label: 'Inne', icon: 'help-circle-outline' },
   ];
   
@@ -73,14 +73,14 @@ export default function FeedbackScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen options={{ 
-        title: 'Prześlij Opinię',
+        title: 'Prześlij opinię',
         headerStyle: { backgroundColor: '#000' },
         headerTintColor: '#fff'
       }} />
       
       <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Rodzaj Opinii</Text>
+          <Text style={styles.sectionTitle}>Rodzaj opinii</Text>
           
           <View style={styles.typeContainer}>
             {feedbackTypes.map((type) => (
@@ -110,7 +110,7 @@ export default function FeedbackScreen() {
         
         {feedbackType === 'general' && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Oceń Aplikację</Text>
+            <Text style={styles.sectionTitle}>Oceń aplikację</Text>
             
             <View style={styles.ratingContainer}>
               {[1, 2, 3, 4, 5].map((star) => (
@@ -135,7 +135,7 @@ export default function FeedbackScreen() {
         )}
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Treść Opinii</Text>
+          <Text style={styles.sectionTitle}>Treść opinii</Text>
           
           <TextInput
             style={[styles.feedbackInput, { minHeight: 150 }]}
@@ -160,7 +160,7 @@ export default function FeedbackScreen() {
           disabled={isSubmitting}
         >
           <Text style={styles.submitButtonText}>
-            {isSubmitting ? 'Wysyłanie...' : 'Wyślij Opinię'}
+            {isSubmitting ? 'Wysyłanie...' : 'Wyślij opinię'}
           </Text>
         </Pressable>
       </ScrollView>

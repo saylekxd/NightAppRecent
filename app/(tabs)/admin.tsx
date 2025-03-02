@@ -116,18 +116,18 @@ export default function DashboardScreen() {
         />
         
         <View style={styles.header}>
-          <Text style={styles.title}>Dashboard</Text>
+          <Text style={styles.title}>Panel</Text>
         </View>
 
         <View style={styles.content}>
           {/* User Feedback Section */}
           <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>User Feedback</Text>
+            <Text style={styles.sectionTitle}>Podziel się swoją opinią</Text>
             
             <View style={styles.infoBox}>
               <Ionicons name="information-circle" size={24} color="#ff3b7f" />
               <Text style={styles.infoText}>
-                Users can only submit feedback if they've had a transaction in the last 24 hours and haven't already submitted a review during this period.
+              Użytkownicy mogą przesłać opinię tylko wtedy, gdy zeskanowali kod QR w ciągu ostatnich 24 godzin i nie zamieścili jeszcze recenzji w tym okresie.
               </Text>
             </View>
             
@@ -136,20 +136,20 @@ export default function DashboardScreen() {
             {/* Review Statistics - only visible to admins */}
             {isAdmin && reviewStats && (
               <View style={styles.reviewStatsContainer}>
-                <Text style={styles.reviewStatsTitle}>Feedback Statistics</Text>
+                <Text style={styles.reviewStatsTitle}>Feedback statystyki</Text>
                 
                 <View style={styles.reviewStatsSummary}>
                   <View style={styles.reviewStatItem}>
                     <Text style={styles.reviewStatValue}>{reviewStats.totalReviews}</Text>
-                    <Text style={styles.reviewStatLabel}>Total Reviews</Text>
+                    <Text style={styles.reviewStatLabel}>Wyszystkie opinie</Text>
                   </View>
                   <View style={styles.reviewStatItem}>
                     <Text style={styles.reviewStatValue}>{reviewStats.averageMood.toFixed(1)}</Text>
-                    <Text style={styles.reviewStatLabel}>Average Mood</Text>
+                    <Text style={styles.reviewStatLabel}>Średnia ocena</Text>
                   </View>
                 </View>
                 
-                <Text style={styles.distributionTitle}>Mood Distribution</Text>
+                <Text style={styles.distributionTitle}>Rozkład nastrojów</Text>
                 <View style={styles.moodDistribution}>
                   {Object.entries(reviewStats.moodDistribution).map(([mood, count]) => (
                     <View key={mood} style={styles.moodItem}>
@@ -184,7 +184,7 @@ export default function DashboardScreen() {
               <Ionicons name="wine" size={32} color="#ff3b7f" />
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Menu Drinków i Shotów</Text>
+              <Text style={styles.cardTitle}>Menu drinków i shotów</Text>
               <Text style={styles.cardDescription}>
                 Sprawdź dostępne drinki i shoty w naszym menu
               </Text>
@@ -219,7 +219,7 @@ export default function DashboardScreen() {
           {isAdmin && (
             <View style={styles.statsContainer}>
               <View style={styles.statsHeader}>
-                <Text style={styles.statsTitle}>Dzisiejsze Statystyki</Text>
+                <Text style={styles.statsTitle}>Dzisiejsze statystyki</Text>
                 <Pressable onPress={loadData}>
                   <Text style={styles.refreshText}>Odśwież</Text>
                 </Pressable>
@@ -231,7 +231,7 @@ export default function DashboardScreen() {
                 <View style={styles.errorContainer}>
                   <Text style={styles.errorText}>{error}</Text>
                   <Pressable style={styles.retryButton} onPress={loadData}>
-                    <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
+                    <Text style={styles.retryButtonText}>Spróbuj ponownie</Text>
                   </Pressable>
                 </View>
               ) : (
@@ -242,11 +242,11 @@ export default function DashboardScreen() {
                   </View>
                   <View style={styles.statCard}>
                     <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
-                    <Text style={styles.statLabel}>Użyte Nagrody</Text>
+                    <Text style={styles.statLabel}>Użyte nagrody</Text>
                   </View>
                   <View style={styles.statCard}>
                     <Text style={styles.statValue}>{stats?.points_awarded || 0}</Text>
-                    <Text style={styles.statLabel}>Przyznane Punkty</Text>
+                    <Text style={styles.statLabel}>Przyznane punkty</Text>
                   </View>
                   <View style={styles.statCard}>
                     <Text style={styles.statValue}>{stats?.capacity_percentage || 0}%</Text>
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 60,
   },
   title: {
     fontSize: 28,

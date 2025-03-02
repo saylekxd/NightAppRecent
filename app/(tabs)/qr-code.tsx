@@ -53,7 +53,7 @@ export default function QRCodeScreen() {
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
             <Pressable style={styles.retryButton} onPress={loadData}>
-              <Text style={styles.retryButtonText}>Spróbuj Ponownie</Text>
+              <Text style={styles.retryButtonText}>Spróbuj ponownie</Text>
             </Pressable>
           </View>
         ) : (
@@ -70,7 +70,7 @@ export default function QRCodeScreen() {
             </View>
 
             <View style={styles.validityContainer}>
-              <Text style={styles.validityTitle}>Ważny Do</Text>
+              <Text style={styles.validityTitle}>Ważny do</Text>
               <Text style={styles.validityTime}>
                 {qrCode?.expires_at
                   ? new Date(qrCode.expires_at).toLocaleString('pl-PL')

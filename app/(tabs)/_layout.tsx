@@ -122,7 +122,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Strona Główna',
+          title: 'Główna',
         }}
       />
       <Tabs.Screen
@@ -147,7 +147,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="admin"
         options={{
-          title: 'Dashboard',
+          title: 'Panel',
         }}
       />
       <Tabs.Screen

@@ -31,7 +31,10 @@ export default function MenuScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView 
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}
@@ -102,6 +105,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  contentContainer: {
+    paddingBottom: 90,
+  },
   background: {
     position: 'absolute',
     left: 0,
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 60,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -167,14 +173,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#333',
+    height: 120,
   },
   itemImage: {
     width: 100,
-    height: 100,
+    height: '100%',
   },
   itemDetails: {
     flex: 1,
     padding: 15,
+    justifyContent: 'space-between',
   },
   itemName: {
     fontSize: 18,
