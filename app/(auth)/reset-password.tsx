@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { resetPassword } from '@/lib/auth';
 
 export default function ResetPasswordScreen() {
@@ -30,6 +31,12 @@ export default function ResetPasswordScreen() {
         colors={['#1a1a1a', '#000']}
         style={StyleSheet.absoluteFill}
       />
+      
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+        </Pressable>
+      </View>
       
       <View style={styles.content}>
         <Text style={styles.title}>Resetowanie Hasła</Text>
@@ -86,10 +93,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    paddingTop: 50,
+    zIndex: 10,
+  },
+  backButton: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: 'rgba(26, 26, 26, 0.7)',
+  },
   content: {
     flex: 1,
     padding: 20,
     justifyContent: 'center',
+    marginTop: -40,
   },
   title: {
     fontSize: 32,

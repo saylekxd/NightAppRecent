@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { supabase } from './supabase';
+import { Platform } from 'react-native';
 
 // Validation schemas
 export const signUpSchema = z.object({
@@ -70,9 +71,13 @@ export async function signOut() {
 }
 
 export async function resetPassword(email: string) {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
-  });
+  // For web platforms, include redirectTo with window.location.origin
+  // For native platforms, don't use window.location
+  const options = Platform.OS === 'web' 
+    ? { redirectTo: `${window.location.origin}/reset-password` }
+    : undefined;
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, options);
 
   if (error) throw error;
 }
