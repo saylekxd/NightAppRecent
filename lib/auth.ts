@@ -12,7 +12,6 @@ export const signUpSchema = z.object({
     .regex(/[0-9]/, 'Password must contain at least one number')
     .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
   fullName: z.string().min(2, 'Full name is required').max(16, 'Full name cannot exceed 16 characters'),
-  username: z.string().min(1, 'Username is required'),
 });
 
 export const signInSchema = z.object({
@@ -24,14 +23,14 @@ export type SignUpData = z.infer<typeof signUpSchema>;
 export type SignInData = z.infer<typeof signInSchema>;
 
 // Auth functions
-export async function signUp({ email, password, fullName, username }: SignUpData) {
+export async function signUp({ email, password, fullName }: SignUpData) {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         full_name: fullName,
-        username: username,
+        username: email,
       },
     },
   });
@@ -44,7 +43,7 @@ export async function signUp({ email, password, fullName, username }: SignUpData
       .from('profiles')
       .upsert({
         id: authData.user.id,
-        username: username,
+        username: email,
         full_name: fullName,
         points: 0,
       });
