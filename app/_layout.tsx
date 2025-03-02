@@ -6,6 +6,14 @@ import { useRouter, useSegments } from 'expo-router';
 import { getSession } from '@/lib/auth';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '@/lib/notifications';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://ad85134147796cd5eb122b85cf998068@o4508910073348096.ingest.de.sentry.io/4508910077083728',
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 declare global {
   interface Window {

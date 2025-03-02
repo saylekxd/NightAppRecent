@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Pressable, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable, TouchableOpacity, Modal, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import { ProfileSkeleton } from '@/app/components/SkeletonLoader';
 import { NotificationBadge } from '@/app/components/NotificationBadge';
 import { createSampleNotifications } from '@/lib/notifications';
 import { GalleryImagePicker } from '@/app/components/GalleryImagePicker';
+import * as Sentry from '@sentry/react-native';
 
 // Define a type for the profile data
 interface ProfileData {
@@ -252,11 +253,15 @@ export default function ProfileScreen() {
         </Pressable>
       </View>
 
-      <Pressable 
-        style={styles.signOutButton}
-        onPress={handleSignOut}>
-        <Text style={styles.signOutText}>Wyloguj się</Text>
-      </Pressable>
+      {/* Sign out button */}
+      <View>
+        <Pressable 
+          style={styles.signOutButton} 
+          onPress={handleSignOut}
+        >
+          <Text style={styles.signOutText}>Wyloguj się</Text>
+        </Pressable>
+      </View>
 
       {/* Gallery Picker Modal */}
       <Modal
@@ -480,5 +485,5 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 90,
-  },
+  }
 });

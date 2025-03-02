@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, Animated, Easing, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { getProfile } from '@/lib/auth';
@@ -205,6 +205,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/>
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}
