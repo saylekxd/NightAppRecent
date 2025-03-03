@@ -41,16 +41,11 @@ export interface AdminStats {
 
 export async function checkAdminStatus(): Promise<boolean> {
   try {
-    console.log('Checking admin status...');
-    
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      console.log('No authenticated user found');
       return false;
     }
     
-    console.log('User found, checking profile:', user.id);
-
     const { data, error } = await supabase
       .from('profiles')
       .select('is_admin')
@@ -58,14 +53,12 @@ export async function checkAdminStatus(): Promise<boolean> {
       .single();
 
     if (error) {
-      console.error('Error checking admin status:', error);
       return false;
     }
 
     console.log('Admin check result:', data?.is_admin);
     return data?.is_admin || false;
   } catch (error) {
-    console.error('Admin check error:', error);
     return false;
   }
 }
@@ -102,8 +95,6 @@ export async function acceptVisit(code: string, activity_name: string): Promise<
       throw new Error('Unauthorized: Admin access required');
     }
 
-    console.log('Accepting visit:', { code, activity_name });
-
     const { error } = await supabase
       .rpc('accept_visit', { 
         p_code: code,
@@ -111,11 +102,9 @@ export async function acceptVisit(code: string, activity_name: string): Promise<
       });
 
     if (error) {
-      console.error('Accept visit error:', error);
       throw error;
     }
   } catch (error) {
-    console.error('Accept visit error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to accept visit');
   }
 }
@@ -158,7 +147,6 @@ export async function acceptReward(lastThreeChars: string) {
       });
 
     if (rpcError) {
-      console.error('Failed to accept reward:', rpcError);
       throw rpcError;
     }
 
@@ -175,7 +163,6 @@ export async function acceptReward(lastThreeChars: string) {
 
     return redemption;
   } catch (error) {
-    console.error('Accept reward error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to redeem code');
   }
 }

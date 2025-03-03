@@ -32,13 +32,11 @@ export const sendNotificationToUser = async (
       .single();
       
     if (error) {
-      console.error('Error sending notification:', error);
       return null;
     }
     
     return data;
   } catch (error) {
-    console.error('Error in sendNotificationToUser:', error);
     return null;
   }
 };
@@ -63,7 +61,6 @@ export const sendTestNotification = async (): Promise<Notification | null> => {
     
     return sendNotificationToUser(user.user.id, testNotification);
   } catch (error) {
-    console.error('Error sending test notification:', error);
     return null;
   }
 };
@@ -87,9 +84,8 @@ export const testSendNotification = async (): Promise<void> => {
     };
     
     await sendNotificationToUser(user.user.id, testNotification);
-    console.log('Test notification sent successfully');
   } catch (error) {
-    console.error('Error sending test notification:', error);
+    // Error handling
   }
 };
 
@@ -110,7 +106,6 @@ export const listenForNotifications = (
   // Create channel with current user's ID
   getCurrentUserId().then(userId => {
     if (!userId) {
-      console.error('User not authenticated');
       return;
     }
     

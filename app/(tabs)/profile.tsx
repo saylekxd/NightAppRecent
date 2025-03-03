@@ -36,8 +36,7 @@ export default function ProfileScreen() {
     
     // Create sample notifications for testing
     // This should be removed in production
-    createSampleNotifications()
-      .catch(console.error);
+    createSampleNotifications();
   }, []);
 
   const loadProfile = async () => {
@@ -81,8 +80,6 @@ export default function ProfileScreen() {
 
   const handleImageSelected = async (imageUrl: string) => {
     try {
-      console.log('Image selected, updating profile...', imageUrl);
-      
       // Close the modal first to prevent UI issues
       setShowGalleryPicker(false);
       
@@ -98,19 +95,14 @@ export default function ProfileScreen() {
       try {
         // Reload profile to reflect changes
         await loadProfile();
-        console.log('Profile refreshed with new image');
       } catch (loadError) {
-        console.error('Error loading profile:', loadError);
-        
         // Fall back to manual state update if profile loading fails
         setProfile((prev: ProfileData | null) => ({
           ...prev,
           avatar_url: imageUrl
         }));
-        console.log('Applied fallback image update to state');
       }
     } catch (err) {
-      console.error('Error handling image selection:', err);
       setError('Failed to update profile image. Please try again.');
     } finally {
       // Always make sure loading state is reset

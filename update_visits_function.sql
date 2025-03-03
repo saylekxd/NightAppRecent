@@ -1,1 +1,0 @@
--- SQL Function to update visits count in profiles table

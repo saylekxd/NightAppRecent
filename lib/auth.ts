@@ -142,3 +142,162 @@ export async function updateProfile(updates: {
   if (error) throw error;
   return data;
 }
+
+// Account deletion
+export async function initiateAccountDeletion(password: string) {
+  // First verify the password is correct
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || !user.email) throw new Error('Not authenticated');
+  
+  // Verify password by attempting to sign in
+  try {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password,
+    });
+    
+    if (error) throw new Error('Incorrect password');
+    
+    // Mark account for deletion by setting metadata
+    const deletionDate = new Date();
+    deletionDate.setDate(deletionDate.getDate() + 30); // 30 days from now
+    
+    const { error: updateError } = await supabase.auth.updateUser({
+      data: { 
+        deletion_requested: true,
+        deletion_date: deletionDate.toISOString(),
+      }
+    });
+    
+    if (updateError) throw updateError;
+    
+    return { success: true, deletionDate };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function cancelAccountDeletion() {
+  try {
+    const { error } = await supabase.auth.updateUser({
+      data: { 
+        deletion_requested: false,
+        deletion_date: null,
+      }
+    });
+    
+    if (error) throw error;
+    
+    return { success: true };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function checkDeletionStatus() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { pendingDeletion: false };
+  
+  const deletionRequested = user.user_metadata?.deletion_requested;
+  const deletionDate = user.user_metadata?.deletion_date;
+  
+  return { 
+    pendingDeletion: !!deletionRequested,
+    deletionDate: deletionDate ? new Date(deletionDate) : null
+  };
+}
+
+/**
+ * Permanently deletes a user account and all associated data.
+ * This should only be called by an admin or a scheduled function.
+ * @param userId The ID of the user to delete
+ */
+export async function permanentlyDeleteUser(userId: string) {
+  try {
+    // 1. Delete user data from profiles table
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', userId);
+    
+    if (profileError) throw profileError;
+    
+    // 2. Delete any other related data in other tables
+    // Add additional delete operations for other tables where user data is stored
+    // For example:
+    // await supabase.from('user_preferences').delete().eq('user_id', userId);
+    // await supabase.from('user_activities').delete().eq('user_id', userId);
+    
+    // 3. Finally delete the user from auth.users
+    const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+    
+    if (authError) throw authError;
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error permanently deleting user:', error);
+    throw error;
+  }
+}
+
+/**
+ * This function should be run as a scheduled job (e.g., daily)
+ * to permanently delete accounts that have passed their deletion date.
+ * It would typically be implemented as a Supabase Edge Function or other server-side process.
+ */
+export async function processPendingDeletions() {
+  try {
+    // This would need to be run with admin privileges
+    // Get all users with deletion_requested = true
+    const { data: users, error } = await supabase.auth.admin.listUsers();
+    
+    if (error) throw error;
+    
+    const now = new Date();
+    const usersToDelete = users.filter((user: any) => {
+      const deletionRequested = user.user_metadata?.deletion_requested;
+      const deletionDate = user.user_metadata?.deletion_date;
+      
+      if (!deletionRequested || !deletionDate) return false;
+      
+      const deleteDate = new Date(deletionDate);
+      return deleteDate <= now;
+    });
+    
+    // Process each user for deletion
+    for (const user of usersToDelete) {
+      await permanentlyDeleteUser(user.id);
+    }
+    
+    return { 
+      success: true, 
+      deletedCount: usersToDelete.length 
+    };
+  } catch (error) {
+    console.error('Error processing pending deletions:', error);
+    throw error;
+  }
+}
+
+// Note: The functions below should be implemented in a Supabase Edge Function
+// and scheduled with Supabase Cron, not in the client application.
+// This is for reference only.
+
+/**
+ * This function should be implemented as a Supabase Edge Function
+ * and scheduled to run daily using Supabase Cron.
+ * 
+ * Example SQL to schedule this function:
+ * 
+ * SELECT cron.schedule(
+ *   'process-account-deletions',
+ *   '0 0 * * *', -- Run daily at midnight
+ *   $$
+ *   SELECT net.http_post(
+ *     url:= 'https://your-project-ref.supabase.co/functions/v1/process-account-deletions',
+ *     headers:= '{"Content-Type": "application/json", "Authorization": "Bearer your-service-role-key"}'::jsonb,
+ *     body:= '{}'::jsonb
+ *   ) as request_id;
+ *   $$
+ * );
+ */

@@ -26,11 +26,9 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
 
   const loadActivities = async () => {
     try {
-      console.log('Starting to load activities...');
       setError(null);
       setLoading(true);
       
-      console.log('Fetching activities from Supabase...');
       const { data, error } = await supabase
         .from('activities')
         .select('*')
@@ -38,14 +36,11 @@ export default function ActivitySelector({ onSelect, onCancel }: ActivitySelecto
         .order('name');
       
       if (error) {
-        console.error('Supabase query error:', error);
         throw error;
       }
 
-      console.log('Activities data received:', data);
       setActivities(data || []);
     } catch (err) {
-      console.error('Failed to load activities:', err);
       setError(err instanceof Error ? err.message : 'Nie udało się załadować aktywności');
     } finally {
       setLoading(false);

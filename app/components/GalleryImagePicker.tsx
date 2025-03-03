@@ -47,7 +47,6 @@ export function GalleryImagePicker({
       }
     } catch (err) {
       setError('Error picking image');
-      console.error('Error picking image:', err);
     }
   };
 
@@ -57,8 +56,6 @@ export function GalleryImagePicker({
     try {
       setUploading(true);
       setError(null);
-      
-      console.log('Starting image upload process with URL:', selectedImage);
       
       try {
         // Read the file as base64
@@ -70,13 +67,9 @@ export function GalleryImagePicker({
           throw new Error('Failed to read image file');
         }
         
-        console.log('Image read successfully as base64');
-        
         // Generate a unique filename with fewer special characters
         const timestamp = Math.floor(Date.now() / 1000);
         const fileName = `avatar${timestamp}.jpg`;
-        
-        console.log(`Preparing to upload with filename: ${fileName}`);
         
         // Upload as base64
         const { data, error: uploadError } = await supabase
@@ -88,15 +81,12 @@ export function GalleryImagePicker({
           });
           
         if (uploadError) {
-          console.error('Upload error:', uploadError);
           throw new Error('Upload failed: ' + (uploadError.message || 'Storage error'));
         }
         
         if (!data) {
           throw new Error('No data returned from upload');
         }
-        
-        console.log('Upload successful:', data);
         
         // Get the public URL
         const { data: urlData } = supabase
@@ -109,39 +99,28 @@ export function GalleryImagePicker({
         }
         
         const publicUrl = urlData.publicUrl;
-        console.log('Public URL generated:', publicUrl);
         
         // Update the profile
         try {
-          console.log('Updating profile with URL:', publicUrl);
           const updatedProfile = await updateProfile({ avatar_url: publicUrl });
           
           if (!updatedProfile) {
             throw new Error('Profile update returned no data');
           }
           
-          console.log('Profile updated successfully');
-          
           // Notify parent of success
           onImageSelected(publicUrl);
         } catch (profileError) {
-          console.error('Profile update error:', profileError);
           throw new Error('Failed to update profile: ' + (profileError instanceof Error ? profileError.message : 'Unknown error'));
         }
       } catch (processError) {
-        console.error('Image processing error:', processError);
-        
         // Fallback approach - use direct URL if available
         try {
-          console.log('Attempting fallback approach...');
-          
           // Attempt direct profile update with the selectedImage URL if it's a remote URL
           if (selectedImage.startsWith('http')) {
-            console.log('Using direct image URL for profile update');
             const updatedProfile = await updateProfile({ avatar_url: selectedImage });
             
             if (updatedProfile) {
-              console.log('Profile updated with direct URL');
               onImageSelected(selectedImage);
               return;
             }
@@ -149,7 +128,6 @@ export function GalleryImagePicker({
           
           throw new Error('Fallback approach failed');
         } catch (fallbackError) {
-          console.error('Fallback error:', fallbackError);
           throw processError; // Re-throw the original error
         }
       }
@@ -158,7 +136,6 @@ export function GalleryImagePicker({
         ? err.message 
         : 'Unknown error during image upload';
       
-      console.error('Final error in upload process:', errorMessage);
       setError(errorMessage);
       Alert.alert(
         'Upload Error',

@@ -30,20 +30,16 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
-        console.log('Current user:', user?.id);
 
         if (user) {
           // Check for recent transactions first
           const hasTransaction = await hasRecentTransaction();
-          console.log('Has recent transaction:', hasTransaction);
           
           // Check for recent reviews
           const hasReview = await hasRecentReview();
-          console.log('Has recent review:', hasReview);
           
           // Get the final result
           const result = await canSubmitReview();
-          console.log('Can submit review result:', result);
           
           setCanSubmit(result.canSubmit);
           setBlockReason(result.reason || null);
@@ -52,7 +48,6 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
           setBlockReason('You must be logged in to submit a review');
         }
       } catch (error) {
-        console.error('Error checking user status:', error);
         setCanSubmit(false);
         setBlockReason('An error occurred while checking your status');
       } finally {
@@ -138,7 +133,6 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
         onReviewSubmitted();
       }
     } catch (error) {
-      console.error('Error submitting review:', error);
       Alert.alert('Error', 'Nie udało się dodać recenzji. Proszę spróbować ponownie');
     } finally {
       setIsSubmitting(false);

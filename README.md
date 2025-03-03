@@ -1,78 +1,132 @@
-# NightApp - Google OAuth with Supabase
+# Nightzone
 
-This project uses Google OAuth 2.0 for authentication with Supabase as the backend.
+<p align="center">
+  <img src="./assets/images/icon.png" alt="Nightzone Logo" width="120" height="120" />
+</p>
 
-## Setup Instructions
+Nightzone is a mobile application designed for nightlife venues and their patrons. The app allows users to scan QR codes at venues, earn rewards, and manage their profiles, while venue administrators can manage their establishments and track customer engagement.
 
-### 1. Supabase Configuration
+## Features
 
-1. Go to your Supabase project dashboard
-2. Navigate to Authentication > Providers
-3. Enable Google provider
-4. Add your Google OAuth credentials:
-   - Client ID
-   - Client Secret
-5. Set the Authorized redirect URI to:
-   - For web: `https://[YOUR_SUPABASE_PROJECT_REF].supabase.co/auth/v1/callback`
-   - Example: `https://rwxzctowvxylopuzpsti.supabase.co/auth/v1/callback`
+- **QR Code Scanning**: Scan venue QR codes to check in and earn points
+- **Rewards System**: Earn and redeem points for rewards at participating venues
+- **User Profiles**: Manage your personal profile and track your rewards
+- **Venue Management**: For administrators to manage their venues and promotions
+- **Notifications**: Stay updated with the latest offers and events
 
-### 2. Google Cloud OAuth Setup
+## Tech Stack
 
-1. Go to the Google Cloud Console: https://console.cloud.google.com/
-2. Create a new project or select an existing one
-3. Navigate to APIs & Services > Credentials
-4. Create OAuth 2.0 Client IDs for each platform:
+- **Frontend**: React Native with Expo
+- **Backend**: Supabase (PostgreSQL, Authentication, Storage)
+- **State Management**: React Context API
+- **Navigation**: Expo Router
+- **UI Components**: Custom components with React Native
+- **Authentication**: Supabase Auth with multiple providers
 
-#### Web Application
-- Authorized JavaScript origins:
-  - `https://rwxzctowvxylopuzpsti.supabase.co`
-  - `http://localhost:3000` (for local development)
-- Authorized redirect URIs:
-  - `https://rwxzctowvxylopuzpsti.supabase.co/auth/v1/callback`
-  - `http://localhost:3000/auth/callback` (for local development)
+## Getting Started
 
-#### iOS Application
-- Bundle ID: `com.swtlabs.nightapp`
+### Prerequisites
 
-#### Android Application
-- Package name: `com.swtlabs.nightapp`
-- SHA-1 certificate fingerprint: (Generate this using the keystore used for signing your app)
+- Node.js (v16 or newer)
+- npm or yarn
+- Expo CLI
+- Supabase account
 
-### 3. Environment Variables
+### Installation
 
-Make sure your `.env` file contains the following variables:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/nightzone.git
+   cd nightzone
+   ```
 
-```
-EXPO_PUBLIC_SUPABASE_URL=https://rwxzctowvxylopuzpsti.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### 4. Deep Linking Configuration
+3. Create a `.env` file in the root directory with your Supabase credentials:
+   ```
+   EXPO_PUBLIC_SUPABASE_URL=your-supabase-url
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
 
-The app is configured to handle deep links for authentication callbacks:
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-- URL Scheme: `nightapp`
-- Deep Link Pattern: `nightapp://auth/callback`
+### Running on a Device
 
-## Testing Authentication
+- **iOS**: `npm run ios`
+- **Android**: `npm run android`
+- **Web**: `npm run build:web`
 
-1. Run the app using `npm run dev`
-2. Navigate to the sign-in screen
-3. Click "Continue with Google"
-4. Complete the Google authentication flow
-5. You should be redirected back to the app and signed in
+## Project Structure
 
-## Troubleshooting
+- `/app`: Main application code with Expo Router
+  - `/(tabs)`: Main tab navigation screens
+  - `/(auth)`: Authentication screens
+  - `/(admin)`: Admin-only screens
+- `/components`: Reusable UI components
+- `/lib`: Utility functions and API clients
+- `/assets`: Images, fonts, and other static assets
+- `/supabase`: Supabase configuration and migrations
 
-If you encounter issues with the authentication flow:
+## Authentication
 
-1. Check the console logs for error messages
-2. Verify that your Google OAuth credentials are correctly configured in Supabase
-3. Ensure the redirect URIs match exactly between Google Cloud and Supabase
-4. For iOS/Android, verify that the bundle ID/package name matches your app configuration
+The app uses Supabase Authentication with support for:
+- Email/Password
+- Google OAuth
+- Apple Sign In
 
-## Additional Resources
+For detailed setup instructions for each auth provider, see the [Authentication Setup Guide](docs/authentication.md).
 
-- [Supabase Auth Documentation](https://supabase.com/docs/guides/auth)
-- [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2)
-- [Expo Authentication Documentation](https://docs.expo.dev/guides/authentication/) 
+## Database Schema
+
+The app uses a PostgreSQL database managed by Supabase with the following main tables:
+- `users`: User profiles and authentication data
+- `venues`: Venue information and details
+- `check_ins`: Records of user check-ins at venues
+- `rewards`: Available rewards and their point values
+- `user_rewards`: Rewards claimed by users
+
+## Deployment
+
+### Expo EAS Build
+
+1. Configure your `eas.json` file
+2. Run the build command:
+   ```bash
+   eas build --platform all
+   ```
+
+3. Submit to app stores:
+   ```bash
+   eas submit --platform ios
+   eas submit --platform android
+   ```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Privacy Policy and Terms of Use
+
+- [Privacy Policy](Privacy_Policy.md)
+- [Terms of Use](Terms_of_Use.md)
+
+## Contact
+
+For support or inquiries, please contact DM
+
+Greets,
+@saylekxd 

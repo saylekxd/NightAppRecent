@@ -24,8 +24,6 @@ export async function hasRecentTransaction(): Promise<boolean> {
   const oneDayAgo = new Date();
   oneDayAgo.setHours(oneDayAgo.getHours() - 24);
   
-  console.log('Checking transactions since:', oneDayAgo.toISOString());
-  
   const { data, error } = await supabase
     .from('transactions')
     .select('id, created_at, type, description')
@@ -34,11 +32,8 @@ export async function hasRecentTransaction(): Promise<boolean> {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error checking recent transactions:', error);
     return false;
   }
-
-  console.log('Recent transactions found:', data?.length, data);
   
   // If we have any transactions in the last 24 hours, return true
   return data && data.length > 0;
@@ -63,7 +58,6 @@ export async function hasRecentReview(): Promise<boolean> {
     .limit(1);
 
   if (error) {
-    console.error('Error checking recent reviews:', error);
     return false;
   }
 
@@ -162,7 +156,6 @@ export async function getReviewStats() {
 
   // Return null for non-admin users instead of throwing an error
   if (!profileData?.is_admin) {
-    console.log('Non-admin user attempted to access review stats');
     return null;
   }
 

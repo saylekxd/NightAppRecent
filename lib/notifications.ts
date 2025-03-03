@@ -197,7 +197,6 @@ export const createSampleNotifications = async (): Promise<void> => {
     .eq('user_id', user.user.id);
     
   if (existingNotifications && existingNotifications.length > 0) {
-    console.log('Sample notifications already exist');
     return;
   }
   
@@ -205,9 +204,5 @@ export const createSampleNotifications = async (): Promise<void> => {
     const { error } = await supabase
       .from('notifications')
       .insert([notification]);
-      
-    if (error) {
-      console.error('Error creating sample notification:', error);
-    }
   }
 }; 
