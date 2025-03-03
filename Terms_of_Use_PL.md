@@ -1,6 +1,6 @@
-# Warunki Użytkowania
+# Regulamin korzystania z aplikacji Nightzone
 
-**Data wejścia w życie: [Aktualna Data]**
+Data wejścia w życie: 02 Marca 2025 r
 
 ## 1. Wprowadzenie
 
@@ -22,6 +22,8 @@ Możemy okresowo aktualizować niniejsze Warunki poprzez zamieszczenie ich zaktu
 
 4.3. Musisz natychmiast powiadomić nas, jeśli dowiesz się o jakimkolwiek nieautoryzowanym użyciu Twojego konta.
 
+4.4. Możesz usunąć swoje konto w dowolnym momencie, korzystając z funkcji "Usuń konto" dostępnej w ustawieniach aplikacji lub kontaktując się z naszym zespołem wsparcia pod adresem noctoklub@gmail.com. Po usunięciu konta, Twoje dane osobowe zostaną usunięte lub zanonimizowane zgodnie z naszą Polityką Prywatności.
+
 ## 5. Zasady Korzystania
 
 5.1. Zgadzasz się nie:
@@ -29,9 +31,13 @@ Możemy okresowo aktualizować niniejsze Warunki poprzez zamieszczenie ich zaktu
    - Korzystać z Aplikacji w sposób niezgodny z prawem lub oszukańczy
    - Używać Aplikacji do wysyłania, świadomego odbierania, przesyłania, pobierania, używania lub ponownego wykorzystywania materiałów, które nie są zgodne z naszymi standardami treści
    - Przesyłać lub powodować wysyłanie jakichkolwiek niezamówionych lub nieautoryzowanych materiałów reklamowych lub promocyjnych
-   - Świadomie przesyłać jakiekolwiek dane, wysyłać lub przesyłać materiały zawierające wirusy, konie trojańskie, robaki, bomby czasowe, keystroke loggery, oprogramowanie szpiegujące, adware lub jakiekolwiek inne szkodliwe programy lub podobny kod komputerowy zaprojektowany w celu niekorzystnego wpływu na działanie jakiegokolwiek oprogramowania lub sprzętu komputerowego
+   - Świadomie przesyłać jakiekolwiek dane, wysyłać lub przesyłać materiały zawierające wirusy, konie trojańskie, keystroke loggery, oprogramowanie szpiegujące, adware lub jakiekolwiek inne szkodliwe programy lub podobny kod komputerowy zaprojektowany w celu niekorzystnego wpływu na działanie jakiegokolwiek oprogramowania lub sprzętu komputerowego
 
 5.2. Zgadzasz się korzystać z Aplikacji wyłącznie w celach zgodnych z prawem i w sposób, który nie narusza praw, nie ogranicza ani nie utrudnia korzystania i korzystania z Aplikacji przez inne osoby.
+
+5.3 Aplikacja jest przeznaczona dla użytkowników, którzy ukończyli 16 lat. Korzystając z Aplikacji, potwierdzasz, że masz co najmniej 16 lat.
+
+5.4 Jeśli masz mniej niż 18 lat, powinieneś przeglądać niniejsze Warunki z rodzicem lub opiekunem, aby upewnić się, że oboje je rozumiecie.
 
 ## 6. Prawa Własności Intelektualnej
 
@@ -78,7 +84,12 @@ Możemy okresowo aktualizować niniejsze Warunki poprzez zamieszczenie ich zaktu
    - Utratą możliwości biznesowych, wartości firmy lub reputacji
    - Jakąkolwiek pośrednią lub wynikową stratą lub szkodą
 
-10.3. Nie będziemy odpowiedzialni za jakiekolwiek straty lub szkody spowodowane wirusem, atakiem typu distributed denial-of-service lub innym technologicznie szkodliwym materiałem, który może zainfekować Twoje urządzenie z powodu korzystania z Aplikacji.
+10.3. Żadne z postanowień niniejszych Warunków nie ogranicza ani nie wyklucza naszej odpowiedzialności za:
+- Śmierć lub obrażenia ciała wynikające z naszego zaniedbania
+- Oszustwo lub oszukańcze wprowadzenie w błąd
+- Jakąkolwiek inną odpowiedzialność, której nie można zgodnie z prawem ograniczyć lub wykluczyć
+
+10.4. Nie będziemy odpowiedzialni za jakiekolwiek straty lub szkody spowodowane wirusem, atakiem typu distributed denial-of-service lub innym technologicznie szkodliwym materiałem, który może zainfekować Twoje urządzenie z powodu korzystania z Aplikacji.
 
 ## 11. Rozwiązanie Umowy
 
@@ -92,11 +103,11 @@ Zgadzasz się bronić, zabezpieczyć i zwolnić z odpowiedzialności naszą firm
 
 ## 13. Prawo Właściwe
 
-Niniejsze Warunki podlegają i są interpretowane zgodnie z prawem [Twojego Kraju/Stanu], bez względu na jego przepisy dotyczące konfliktu praw.
+Niniejsze Warunki podlegają i są interpretowane zgodnie z Polskim prawem, bez względu na jego przepisy dotyczące konfliktu praw.
 
 ## 14. Rozwiązywanie Sporów
 
-Wszelkie spory wynikające z lub związane z niniejszymi Warunkami lub Aplikacją będą rozstrzygane w drodze wiążącego arbitrażu zgodnie z zasadami [Odpowiednie Stowarzyszenie Arbitrażowe] w [Twoje Miasto/Stan].
+Wszelkie spory wynikające z lub związane z niniejszymi Warunkami lub Aplikacją będą rozstrzygane w drodze wiążącego arbitrażu zgodnie z zasadami właściwego Sądu zlokalizowanego w mieście Rybnik o kodzie pocztowym 44-200 w Polsce.
 
 ## 15. Rozdzielność Postanowień
 
@@ -110,5 +121,33 @@ Niniejsze Warunki stanowią całość porozumienia między Tobą a nami w odnies
 
 Jeśli masz jakiekolwiek pytania dotyczące niniejszych Warunków, skontaktuj się z nami:
 
-Email: [Twój Email Wsparcia]
-Adres: [Adres Twojej Firmy] 
+Email: noctoklub@gmail.com
+Adres: ul. Dworek 5/33 44-200 Rybnik
+
+## 18. Warunki Platform Dystrybucyjnych
+
+18.1. Korzystanie z Aplikacji podlega również warunkom i zasadom stron trzecich, za pośrednictwem których pobierasz Aplikację, takich jak Apple App Store lub Google Play Store ("Platformy Dystrybucyjne").
+
+18.2. Niniejsze Warunki stanowią umowę między Tobą a nami, a nie z Platformami Dystrybucyjnymi. Platformy Dystrybucyjne nie są odpowiedzialne za Aplikację i jej zawartość.
+
+18.3. Przyznajemy Ci nieprzenoszalną licencję na korzystanie z Aplikacji na dowolnym urządzeniu, które posiadasz lub kontrolujesz, zgodnie z warunkami użytkowania odpowiednich Platform Dystrybucyjnych.
+
+## 19. Aktualizacje Aplikacji
+
+19.1. Od czasu do czasu możemy wydawać aktualizacje Aplikacji. W zależności od ustawień Twojego urządzenia, aktualizacje mogą być instalowane automatycznie.
+
+19.2. Korzystanie z zaktualizowanej wersji Aplikacji podlega niniejszym Warunkom, chyba że wraz z aktualizacją przekażemy Ci nowe warunki.
+
+19.3. Jeśli nie zaakceptujesz aktualizacji Aplikacji, możesz nadal korzystać z poprzedniej wersji, jednak niektóre funkcje mogą nie działać prawidłowo lub być niedostępne.
+
+## 20. Polityka Prywatności
+
+20.1. Korzystanie z Aplikacji podlega również naszej Polityce Prywatności, która opisuje, w jaki sposób zbieramy, przechowujemy i przetwarzamy Twoje dane osobowe. Polityka Prywatności stanowi integralną część niniejszych Warunków.
+
+20.2. Nasza Polityka Prywatności jest dostępna w Aplikacji oraz na naszej stronie internetowej.
+
+## 21. Dostępność Aplikacji
+
+21.1. Aplikacja jest dostępna bezpłatnie. Nie pobieramy opłat za pobranie lub korzystanie z podstawowych funkcji Aplikacji.
+
+21.2. Dołożymy wszelkich starań, aby Aplikacja była dostępna przez cały czas, jednak nie gwarantujemy, że Aplikacja zawsze będzie dostępna bez zakłóceń. Dostęp do Aplikacji może być czasowo zawieszony bez powiadomienia w przypadku awarii systemu, konserwacji, naprawy lub z powodów pozostających poza naszą kontrolą.

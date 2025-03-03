@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.saylekxd.boltexponativewind'
+    namespace 'com.nightzone.app'
     defaultConfig {
-        applicationId 'com.saylekxd.boltexponativewind'
+        applicationId 'com.nightzone.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

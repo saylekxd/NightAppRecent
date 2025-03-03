@@ -1,4 +1,4 @@
-package com.saylekxd.boltexponativewind
+package com.nightzone.app
 
 import android.app.Application
 import android.content.res.Configuration

@@ -217,11 +217,11 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
   });
 
   const rankDescriptions: { [key: string]: string } = {
-    Nowicjusz: "Ranga początkowa dla nowych członków.",
-    Adept: "Ranga pośrednia z dodatkowymi korzyściami.",
-    Mistrz: "Odblokowane premium korzyści.",
-    Arcymistrz: "Dostępne zaawansowane przywileje.",
-    Omnipotent: "Ekskluzywne elitarne członkostwo."
+    Rookie: "Nowy w naszej społeczności.\nCieszymy się, że dołączyłeś do Nas!",
+    Trendsetter: "Twoja obecność kształtuje nasz styl.\nDobrze, że jesteś.",
+    Icon: "Klub bez Ciebie to nie to samo.\nDziękujemy za Twoją lojalność!",
+    Legend: "Jesteś twarzą naszego klubu.\nNie wiemy czy ochrona może Cię nawet wyrzucić.",
+    GOAT: "Jesteś najlepszy w historii.\nUmawiasz się na kawę z właścicielami."
   };
 
   // Add this new function to animate the modal
@@ -304,7 +304,7 @@ export function PointsCard({ points, currentRank, pointsToNext, onRefresh, isLoa
       />
       <View style={styles.pointsHeader}>
         <View>
-          <Text style={styles.pointsLabel}>Twoje punkty</Text>
+          <Text style={styles.pointsLabel}>Suma zdobytych punktów</Text>
           <Animated.Text 
             style={[
               styles.pointsValue,

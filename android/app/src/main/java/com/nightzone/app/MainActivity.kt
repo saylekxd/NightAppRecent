@@ -1,4 +1,4 @@
-package com.saylekxd.boltexponativewind
+package com.nightzone.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

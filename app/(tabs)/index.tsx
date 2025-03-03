@@ -205,7 +205,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/>
+      
       <LinearGradient
         colors={['#1a1a1a', '#000']}
         style={styles.background}

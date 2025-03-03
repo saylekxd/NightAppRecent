@@ -14,11 +14,11 @@ export default function AboutScreen() {
   };
   
   const openTermsOfService = () => {
-    Linking.openURL('https://example.com/terms');
+    Linking.openURL('https://www.nocklub.com/prawne/regulamin');
   };
   
   const openPrivacyPolicy = () => {
-    Linking.openURL('https://example.com/privacy');
+    Linking.openURL('https://www.nocklub.com/prawne/polityka-prywatnosci');
   };
   
   const openInstagram = () => {

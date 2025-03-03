@@ -310,6 +310,20 @@ export default function SignUpScreen() {
               <Text style={styles.linkText}>Zaloguj się</Text>
             </Link>
           </View>
+          
+          <View style={styles.legalLinksContainer}>
+            <Link href="https://www.nocklub.com/prawne/polityka-prywatnosci" asChild>
+              <Pressable style={styles.legalLink}>
+                <Text style={styles.legalLinkText}>Polityka prywatności</Text>
+              </Pressable>
+            </Link>
+            <Text style={styles.legalLinkDivider}>•</Text>
+            <Link href="https://www.nocklub.com/prawne/regulamin" asChild>
+              <Pressable style={styles.legalLink}>
+                <Text style={styles.legalLinkText}>Warunki użytkowania</Text>
+              </Pressable>
+            </Link>
+          </View>
         </Animated.View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -459,5 +473,27 @@ const styles = StyleSheet.create({
     color: '#ff3b7f',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  legalLinksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  legalLink: {
+    marginHorizontal: 5,
+  },
+  legalLinkText: {
+    marginTop: 10,
+    color: '#fff',
+    opacity: 0.8,
+    fontSize: 12,
+    textDecorationLine: 'underline',
+  },
+  legalLinkDivider: {
+    color: '#fff',
+    opacity: 0.8,
+    fontSize: 14,
+    marginHorizontal: 5,
   },
 });

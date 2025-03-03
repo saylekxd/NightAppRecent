@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bolt-expo-nativewind",
-    "slug": "bolt-expo-nativewind",
+    "name": "Nightzone",
+    "slug": "nightzone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
         "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
       },
-      "bundleIdentifier": "com.saylekxd.boltexponativewind"
+      "bundleIdentifier": "com.nightzone.app"
     },
     "web": {
       "bundler": "metro",
@@ -53,7 +53,7 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.saylekxd.boltexponativewind"
+      "package": "com.nightzone.app"
     },
     "experiments": {
       "typedRoutes": true

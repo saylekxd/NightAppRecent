@@ -136,7 +136,7 @@ export default function AdminDashboardScreen() {
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.visits_count || 0}</Text>
-                <Text style={styles.statLabel}>Wizyty</Text>
+                <Text style={styles.statLabel}>Zeskanowane QR</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats?.rewards_used || 0}</Text>
