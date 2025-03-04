@@ -332,12 +332,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-			name = "Upload Debug Symbols to Sentry";
 			inputPaths = (
 			);
+			name = "Upload Debug Symbols to Sentry";
 			outputPaths = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";
 		};
@@ -381,8 +381,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nightzone.app";
-				PRODUCT_NAME = "Nightzone";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nightzone.app;
+				PRODUCT_NAME = Nightzone;
 				SWIFT_OBJC_BRIDGING_HEADER = "boltexponativewind/boltexponativewind-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -409,8 +409,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nightzone.app";
-				PRODUCT_NAME = "Nightzone";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nightzone.app;
+				PRODUCT_NAME = Nightzone;
 				SWIFT_OBJC_BRIDGING_HEADER = "boltexponativewind/boltexponativewind-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
