@@ -88,11 +88,11 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
   }, [justSubmitted, fadeAnim, scaleAnim]);
 
   const moods = [
-    { value: 1, icon: 'sad-outline', label: 'Very Unhappy' },
-    { value: 2, icon: 'sad', label: 'Unhappy' },
-    { value: 3, icon: 'happy-outline', label: 'Neutral' },
-    { value: 4, icon: 'happy', label: 'Happy' },
-    { value: 5, icon: 'heart', label: 'Very Happy' },
+    { value: 1, icon: 'sad-outline', label: 'Fatalnie' },
+    { value: 2, icon: 'sad', label: 'Słabo' },
+    { value: 3, icon: 'happy-outline', label: 'OK' },
+    { value: 4, icon: 'happy', label: 'Dobrze' },
+    { value: 5, icon: 'heart', label: 'Sztoos' },
   ];
 
   const handleSubmit = async () => {
@@ -167,8 +167,6 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
             }
           ]}
         >
-          <Ionicons name="checkmark-circle" size={50} color="#ff3b7f" />
-          <Text style={styles.successTitle}>Thank You for Your Feedback!</Text>
           <View style={styles.submittedMoodContainer}>
             <Ionicons 
               name={moodIcon as any} 
@@ -176,6 +174,8 @@ export const Review = ({ onReviewSubmitted }: ReviewProps) => {
               color="#ffffff" 
             />
           </View>
+          <Text style={styles.successTitle}>Dzięki za feedback!</Text>
+          
           <Text style={styles.successMessage}>
             Twoja opinia jest dla nas ważna i pomaga nam ulepszać nasze usługi!
           </Text>
@@ -276,7 +276,7 @@ Dziękujemy za Twój wkład – pomagasz nam ulepszać nasze usługi!
 
       <TextInput
         style={styles.commentInput}
-        placeholder="Share your thoughts (optional)"
+        placeholder="Podziel się myślami (opcjonalnie)"
         placeholderTextColor="#888"
         value={comment}
         onChangeText={setComment}

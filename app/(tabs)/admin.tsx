@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
@@ -35,8 +35,26 @@ export default function DashboardScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-
+  const spinAnim = useRef(new Animated.Value(0)).current;
+  
+  // Add rotation animation for refresh icon
+  const spin = spinAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg']
+  });
+  
+  // Function to start refresh animation
+  const startRefreshAnimation = () => {
+    spinAnim.setValue(0);
+    Animated.timing(spinAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true
+    }).start();
+  };
+  
   useEffect(() => {
     const initializeData = async () => {
       await checkUserAdmin();
@@ -59,6 +77,8 @@ export default function DashboardScreen() {
     try {
       setError(null);
       setLoading(true);
+      setRefreshing(true);
+      startRefreshAnimation();
       
       // For non-admin users, only try to get admin stats if they are admin
       if (isAdmin) {
@@ -84,6 +104,7 @@ export default function DashboardScreen() {
       setError(err instanceof Error ? err.message : 'Nie udało się załadować statystyk');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -117,6 +138,21 @@ export default function DashboardScreen() {
         
         <View style={styles.header}>
           <Text style={styles.title}>Panel</Text>
+          <Pressable 
+            style={styles.refreshButton}
+            onPress={() => {
+              loadData();
+              scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+            }}
+          >
+            {refreshing ? (
+              <ActivityIndicator size="small" color="#ff3b7f" />
+            ) : (
+              <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                <Ionicons name="refresh" size={24} color="#ff3b7f" />
+              </Animated.View>
+            )}
+          </Pressable>
         </View>
 
         <View style={styles.content}>
@@ -288,6 +324,9 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     paddingTop: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontSize: 28,
@@ -497,5 +536,15 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 90,
+  },
+  refreshButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 59, 127, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 59, 127, 0.3)',
   },
 });
