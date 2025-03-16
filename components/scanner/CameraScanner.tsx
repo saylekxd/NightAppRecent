@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { CameraView } from 'expo-camera';
 
 interface CameraScannerProps {
   onScan: (data: { type: string; data: string }) => void;
@@ -10,12 +9,12 @@ interface CameraScannerProps {
 
 export function CameraScanner({ onScan, scanned }: CameraScannerProps) {
   return (
-    <Camera
+    <CameraView
       style={StyleSheet.absoluteFillObject}
-      type={CameraType.back}
-      onBarCodeScanned={scanned ? undefined : onScan}
-      barCodeScannerSettings={{
-        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+      facing="back"
+      onBarcodeScanned={scanned ? undefined : onScan}
+      barcodeScannerSettings={{
+        barcodeTypes: ['qr'],
       }}
     >
       <View style={styles.overlay}>
@@ -24,7 +23,7 @@ export function CameraScanner({ onScan, scanned }: CameraScannerProps) {
           Position the QR code within the frame
         </Text>
       </View>
-    </Camera>
+    </CameraView>
   );
 }
 

@@ -8,11 +8,15 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
+        "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.nightzone.app"
     },
@@ -29,7 +33,6 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes."
         }
       ],
-      "expo-barcode-scanner",
       [
         "expo-video",
         {
@@ -43,7 +46,9 @@
         {
           "url": "https://sentry.io/",
           "project": "react-native",
-          "organization": "swtlabs-vn"
+          "organization": "swtlabs-vn",
+          "disableAutoUpload": true,
+          "disableSymbolication": true
         }
       ]
     ],
@@ -57,6 +62,14 @@
     },
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bba15d90-7208-40fd-8055-11d7e838ec34"
+      }
     }
   }
 }
