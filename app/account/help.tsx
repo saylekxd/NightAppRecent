@@ -192,7 +192,7 @@ export default function HelpScreen() {
               onPress={emailSupport}
             >
               <Ionicons name="mail-outline" size={24} color="#ff3b7f" />
-              <Text style={styles.contactMethodText}>noctoklub@gmail.com</Text>
+              <Text style={styles.contactMethodText}>pomoc@klubnoc.com</Text>
             </Pressable>
           </View>
         </View>

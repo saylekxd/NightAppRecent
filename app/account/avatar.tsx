@@ -7,7 +7,7 @@ import { getProfile, updateProfile } from '@/lib/auth';
 const AVATARS = [
   {
     id: 'default',
-    url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800',
+    url: 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/shine%20safe%20tonight.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvc2hpbmUgc2FmZSB0b25pZ2h0LnBuZyIsImlhdCI6MTc0MjIzNTQ1NCwiZXhwIjoxODk5OTE1NDU0fQ.PLeHDCtTkHKMTLtMJcN2Smc2k-Ma7fxq97QJ2qxLU0I',
   },
   {
     id: 'avatar1',

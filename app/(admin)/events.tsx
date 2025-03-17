@@ -162,7 +162,7 @@ export default function AdminEventsScreen() {
               <View style={styles.postHeader}>
                 <Image
                   source={{
-                    uri: post.user?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800'
+                    uri: post.user?.avatar_url || 'https://rwxzctowvxylopuzpsti.supabase.co/storage/v1/object/sign/images/avatar-example.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvYXZhdGFyLWV4YW1wbGUucG5nIiwiaWF0IjoxNzQyMjM1NTY1LCJleHAiOjE5MzE0NTE1NjV9.Ta66j-srB78MR1nhqWFRFTeyVz-ZO6kMdJYYxJcqWuw'
                   }}
                   style={styles.avatar}
                 />

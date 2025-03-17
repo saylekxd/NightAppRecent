@@ -146,7 +146,7 @@ export default function HomeScreen() {
       if (error) throw error;
 
       setNewPost('');
-      alert('Your post has been submitted for approval');
+      alert('Twój post został wysłany do sprawdzenia!');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create post');
     } finally {
