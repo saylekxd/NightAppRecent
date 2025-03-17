@@ -39,7 +39,7 @@ export default function ResetPasswordScreen() {
       </View>
       
       <View style={styles.content}>
-        <Text style={styles.title}>Resetowanie Hasła</Text>
+        <Text style={styles.title}>Resetowanie hasła</Text>
         <Text style={styles.subtitle}>
           Podaj swój adres email, a wyślemy Ci instrukcje resetowania hasła.
         </Text>

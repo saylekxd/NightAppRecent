@@ -91,12 +91,14 @@ export default function SignUpScreen() {
 
           <FormInput
             icon="person"
-            placeholder="Imię i Nazwisko"
+            placeholder="Wpisz swoje imię i nazwisko"
+            label="Imię i Nazwisko"
             value={fullName}
             onChangeText={setFullName}
             error={fieldErrors.fullName}
             maxLength={16}
             showCharCount
+            isError={!!fieldErrors.fullName}
           />
 
           <FormInput

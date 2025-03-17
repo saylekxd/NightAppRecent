@@ -10,6 +10,7 @@ interface ErrorMessageProps {
 export const ErrorMessage = ({ message, visible }: ErrorMessageProps) => {
   const [fadeAnim] = React.useState(new Animated.Value(0));
   const [shakeAnim] = React.useState(new Animated.Value(0));
+  const [pulseAnim] = React.useState(new Animated.Value(1));
 
   React.useEffect(() => {
     if (visible && message) {
@@ -27,6 +28,22 @@ export const ErrorMessage = ({ message, visible }: ErrorMessageProps) => {
         Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true, easing: Easing.bounce }),
         Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true, easing: Easing.bounce }),
       ]).start();
+      
+      // Start pulsing animation for icon
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.2,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
     } else {
       // Fade out animation
       Animated.timing(fadeAnim, {
@@ -34,8 +51,11 @@ export const ErrorMessage = ({ message, visible }: ErrorMessageProps) => {
         duration: 200,
         useNativeDriver: true,
       }).start();
+      
+      // Stop pulsing animation
+      pulseAnim.setValue(1);
     }
-  }, [visible, message, fadeAnim, shakeAnim]);
+  }, [visible, message, fadeAnim, shakeAnim, pulseAnim]);
 
   if (!visible || !message) {
     return null;
@@ -51,7 +71,9 @@ export const ErrorMessage = ({ message, visible }: ErrorMessageProps) => {
         }
       ]}
     >
-      <MaterialIcons name="error-outline" size={20} color="#ff3b7f" />
+      <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+        <MaterialIcons name="error-outline" size={24} color="#ff3b7f" />
+      </Animated.View>
       <Text style={styles.text}>{message}</Text>
     </Animated.View>
   );
@@ -61,17 +83,23 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 59, 127, 0.1)',
+    backgroundColor: 'rgba(255, 59, 127, 0.15)',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
+    padding: 16,
+    marginBottom: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 59, 127, 0.3)',
+    borderColor: 'rgba(255, 59, 127, 0.4)',
+    shadowColor: '#ff3b7f',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
   },
   text: {
     color: '#ff3b7f',
-    marginLeft: 8,
+    marginLeft: 12,
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '500',
   },
 }); 

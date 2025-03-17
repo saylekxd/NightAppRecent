@@ -4,20 +4,21 @@ import { Platform } from 'react-native';
 
 // Validation schemas
 export const signUpSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Nieprawidłowy adres e-mail'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
-  fullName: z.string().min(2, 'Full name is required').max(16, 'Full name cannot exceed 16 characters'),
+    .min(8, 'Hasło musi mieć co najmniej 8 znaków')
+    .regex(/[A-Z]/, 'Hasło musi zawierać co najmniej jedną wielką literę')
+    .regex(/[a-z]/, 'Hasło musi zawierać co najmniej jedną małą literę')
+    .regex(/[0-9]/, 'Hasło musi zawierać co najmniej jedną cyfrę')
+    .regex(/[^A-Za-z0-9]/, 'Hasło musi zawierać co najmniej jeden znak specjalny'),
+    fullName: z.string().min(2, 'Pełna nazwa jest wymagana').max(16, 'Pełna nazwa nie może przekraczać 16 znaków'),
 });
 
+
 export const signInSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Nieprawidłowy adres e-mail'),
+  password: z.string().min(1, 'Hasło jest wymagane'),
 });
 
 export type SignUpData = z.infer<typeof signUpSchema>;
