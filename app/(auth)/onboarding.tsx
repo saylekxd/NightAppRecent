@@ -24,7 +24,7 @@ export default function OnboardingScreen() {
   };
   
   const openDeveloperWebsite = () => {
-    Linking.openURL('https://swtlabs.pl');
+    Linking.openURL('https://www.swtlabs.pl');
   };
 
   return (
