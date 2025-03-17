@@ -8,6 +8,7 @@ import { ErrorMessage } from '@/app/components/ErrorMessage';
 import { FormInput } from '@/app/components/FormInput';
 import { Button } from '@/app/components/Button';
 import { Pressable } from 'react-native';
+import { images } from '@/assets';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -85,7 +86,7 @@ export default function SignInScreen() {
         <View style={styles.content}>
           <View style={styles.logoContainer}>
             <Image 
-              source={require('@/assets/images/nigthzonelogo.png')} 
+              source={images.nightzoneLogo} 
               style={styles.logo}
               resizeMode="contain"
             />

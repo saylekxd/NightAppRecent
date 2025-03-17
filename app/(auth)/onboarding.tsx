@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, TouchableOpacity, Linking, Image } f
 import { useVideoPlayer, VideoView, VideoSource } from 'expo-video';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { images } from '@/assets';
 
 export default function OnboardingScreen() {
   const videoSource: VideoSource = {
@@ -53,8 +54,8 @@ export default function OnboardingScreen() {
           <TouchableOpacity style={styles.brandContainer} onPress={openDeveloperWebsite}>
             <Text style={styles.developerText}>Developed by</Text>
             <Image 
-              source={require('@/assets/images/swtlabslogo.png')}
-              style={styles.brandLogo}
+              source={images.swtlabsLogo}
+              style={styles.footerLogo}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginRight: 8,
   },
-  brandLogo: {
+  footerLogo: {
     width: 120,
     height: 30,
     opacity: 0.6,

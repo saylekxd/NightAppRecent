@@ -9,7 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "assetBundlePatterns": [
-      "**/*"
+      "**/*",
+      "assets/images/nigthzonelogo.png",
+      "assets/images/swtlabslogo.png"
     ],
     "ios": {
       "supportsTablet": true,

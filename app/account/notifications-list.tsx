@@ -11,7 +11,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { getNotifications, markAsRead, markAllAsRead, deleteNotification, Notification } from '@/lib/notifications';
-import { testSendNotification } from '@/lib/mockNotificationServer';
 import { Stack, router } from 'expo-router';
 
 export default function NotificationsListScreen() {
@@ -19,7 +18,6 @@ export default function NotificationsListScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [testingSending, setTestingSending] = useState(false);
   
   const loadNotifications = async (showLoading = true) => {
     try {
@@ -82,20 +80,6 @@ export default function NotificationsListScreen() {
     }
   };
   
-  const handleTestNotification = async () => {
-    try {
-      setTestingSending(true);
-      await testSendNotification();
-      // Refresh the list after sending a test notification
-      await loadNotifications(false);
-    } catch (err) {
-      console.error('Error sending test notification:', err);
-      setError(err instanceof Error ? err.message : 'Failed to send test notification');
-    } finally {
-      setTestingSending(false);
-    }
-  };
-  
   const renderNotificationItem = ({ item }: { item: Notification }) => {
     const typeIcons: Record<string, any> = {
       info: 'information-circle',
@@ -144,9 +128,9 @@ export default function NotificationsListScreen() {
   const EmptyNotifications = () => (
     <View style={styles.emptyContainer}>
       <Ionicons name="notifications-off-outline" size={60} color="#666" />
-      <Text style={styles.emptyText}>No notifications yet</Text>
+      <Text style={styles.emptyText}>Brak powiadomień</Text>
       <Text style={styles.emptySubtext}>
-        When you receive notifications, they will appear here
+        Kiedy otrzymasz powiadomienia, pojawią się tutaj
       </Text>
     </View>
   );
@@ -160,7 +144,7 @@ export default function NotificationsListScreen() {
       
       <Stack.Screen 
         options={{
-          title: 'Notifications',
+          title: 'Powiadomienia',
           headerRight: () => (
             <Pressable onPress={() => router.push('/account/notifications')}>
               <Ionicons name="settings-outline" size={24} color="#fff" />
@@ -173,7 +157,7 @@ export default function NotificationsListScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={() => loadNotifications()}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
+            <Text style={styles.retryButtonText}>Spróbuj ponownie</Text>
           </Pressable>
         </View>
       )}
@@ -181,7 +165,7 @@ export default function NotificationsListScreen() {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#ff3b7f" />
-          <Text style={styles.loadingText}>Loading notifications...</Text>
+          <Text style={styles.loadingText}>Laduje powiadomienia...</Text>
         </View>
       ) : (
         <>
@@ -191,19 +175,9 @@ export default function NotificationsListScreen() {
                 style={styles.markAllButton}
                 onPress={handleMarkAllAsRead}
               >
-                <Text style={styles.markAllText}>Mark all as read</Text>
+                <Text style={styles.markAllText}>Oznacz jako przeczytane</Text>
               </Pressable>
             )}
-            
-            <Pressable 
-              style={[styles.testButton, testingSending && styles.testButtonDisabled]}
-              onPress={handleTestNotification}
-              disabled={testingSending}
-            >
-              <Text style={styles.testButtonText}>
-                {testingSending ? 'Sending...' : 'Test Toast Notification'}
-              </Text>
-            </Pressable>
           </View>
           
           <FlatList
@@ -353,19 +327,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 15,
     paddingBottom: 5,
-  },
-  testButton: {
-    backgroundColor: '#3b82f6',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-  },
-  testButtonDisabled: {
-    backgroundColor: '#3b82f680',
-  },
-  testButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
+  }
 }); 

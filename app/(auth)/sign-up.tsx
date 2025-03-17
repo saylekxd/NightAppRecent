@@ -7,6 +7,7 @@ import { ZodError } from 'zod';
 import { ErrorMessage } from '@/app/components/ErrorMessage';
 import { FormInput } from '@/app/components/FormInput';
 import { Button } from '@/app/components/Button';
+import { images } from '@/assets';
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState('');
@@ -78,7 +79,7 @@ export default function SignUpScreen() {
         <View style={styles.content}>
           <View style={styles.logoContainer}>
             <Image 
-              source={require('@/assets/images/nigthzonelogo.png')} 
+              source={images.nightzoneLogo} 
               style={styles.logo}
               resizeMode="contain"
             />

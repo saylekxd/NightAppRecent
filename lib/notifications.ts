@@ -156,38 +156,6 @@ export const createSampleNotifications = async (): Promise<void> => {
       read: false,
       created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
     },
-    {
-      user_id: user.user.id,
-      title: 'Zdobyłeś 50 punktów!',
-      body: 'Gratulacje, zdobyłeś 50 punktów za pierwszą wizytę.',
-      type: 'success',
-      read: false,
-      created_at: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
-    },
-    {
-      user_id: user.user.id,
-      title: 'Nowa promocja dostępna',
-      body: 'Sprawdź naszą nową ofertę specjalną w zakładce promocji.',
-      type: 'info',
-      read: false,
-      created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
-    },
-    {
-      user_id: user.user.id,
-      title: 'Możesz odebrać nagrodę!',
-      body: 'Masz wystarczającą ilość punktów, aby odebrać nagrodę. Odwiedź zakładkę Nagrody.',
-      type: 'success',
-      read: false,
-      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    },
-    {
-      user_id: user.user.id,
-      title: 'Ważna informacja!',
-      body: 'Przypominamy o zmianie godzin otwarcia w najbliższy weekend.',
-      type: 'warning',
-      read: true,
-      created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
-    },
   ];
   
   // Check if we already have notifications to avoid duplicates

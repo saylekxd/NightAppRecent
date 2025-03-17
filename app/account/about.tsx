@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+import { images } from '@/assets';
 
 export default function AboutScreen() {
   const appVersion = Constants.expoConfig?.version || '1.0.0';
@@ -30,7 +31,7 @@ export default function AboutScreen() {
   };
 
   const openDeveloperWebsite = () => {
-    Linking.openURL('https://swtlabs.pl');
+    Linking.openURL('https://www.swtlabs.pl');
   };
 
   return (
@@ -44,18 +45,18 @@ export default function AboutScreen() {
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.logoSection}>
           <Image 
-            source={require('@/assets/images/icon.png')} 
+            source={images.icon}
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={styles.appName}>Night App</Text>
+          <Text style={styles.appName}>Nightzone</Text>
           <Text style={styles.versionText}>Wersja {appVersion} (build {buildNumber})</Text>
         </View>
         
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>O Nas</Text>
           <Text style={styles.descriptionText}>
-            Night App to aplikacja lojalnościowa stworzona dla miłośników nocnego życia. 
+            Nightzone to aplikacja lojalnościowa stworzona dla miłośników nocnego życia. 
             Zbieraj punkty za wizyty w naszym klubie, wymieniaj je na ekskluzywne nagrody i bądź 
             na bieżąco z najlepszymi wydarzeniami w mieście.
           </Text>
@@ -99,12 +100,12 @@ export default function AboutScreen() {
           <Pressable style={styles.developerInfo} onPress={openDeveloperWebsite}>
             <Text style={styles.developerText}>Developed by</Text>
             <Image 
-              source={require('@/assets/images/swtlabslogo.png')}
+              source={images.swtlabsLogo} 
               style={styles.developerLogo}
               resizeMode="contain"
             />
           </Pressable>
-          <Text style={styles.copyrightText}>© 2025 Night App. Wszelkie prawa zastrzeżone.</Text>
+          <Text style={styles.copyrightText}>© 2025 Nightzone. Wszelkie prawa zastrzeżone.</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
