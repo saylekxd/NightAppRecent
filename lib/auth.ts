@@ -63,6 +63,12 @@ export async function signIn({ email, password }: SignInData) {
   });
 
   if (error) throw error;
+  
+  // Cancel any pending account deletion when user logs in
+  if (data.user) {
+    await cancelAccountDeletion(data.user.id);
+  }
+  
   return data;
 }
 
@@ -142,4 +148,50 @@ export async function updateProfile(updates: {
 
   if (error) throw error;
   return data;
+}
+
+// Account deletion management
+export async function requestAccountDeletion() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  // Set deletion date to 14 days from now
+  const deletionDate = new Date();
+  deletionDate.setDate(deletionDate.getDate() + 14);
+
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      deletion_requested: true,
+      deletion_date: deletionDate.toISOString(),
+    }
+  });
+
+  if (error) throw error;
+}
+
+export async function cancelAccountDeletion(userId?: string) {
+  // For client-side, we can only update the current user
+  // So we'll ignore userId parameter and just use the current user
+  const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+  
+  if (getUserError) throw getUserError;
+  if (!user) throw new Error('Not authenticated');
+  
+  // Get the current user metadata
+  const metadata = user.user_metadata || {};
+  
+  // If the user has requested deletion, cancel it
+  if (metadata.deletion_requested === true) {
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        deletion_requested: false,
+        deletion_date: null,
+      }
+    });
+
+    if (error) throw error;
+    return true; // Deletion was cancelled
+  }
+  
+  return false; // No deletion was pending
 }

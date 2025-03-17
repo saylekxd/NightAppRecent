@@ -1,6 +1,7 @@
 import React from 'react';
 import Toast, { BaseToast, BaseToastProps } from 'react-native-toast-message';
 import { router } from 'expo-router';
+import { supabase } from '@/lib/supabase';
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
@@ -19,6 +20,13 @@ export interface Notification {
 let notifications: Notification[] = [];
 
 export const getNotifications = async (): Promise<Notification[]> => {
+  // Check if the user is authenticated
+  const { data } = await supabase.auth.getSession();
+  if (!data.session) {
+    // User is not authenticated, throw a specific error that can be handled
+    throw new Error('User not authenticated');
+  }
+  
   return notifications;
 };
 

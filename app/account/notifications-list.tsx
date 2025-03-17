@@ -26,7 +26,11 @@ export default function NotificationsListScreen() {
       const data = await getNotifications();
       setNotifications(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load notifications');
+      if (err instanceof Error && err.message === 'User not authenticated') {
+        setNotifications([]);
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to load notifications');
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);

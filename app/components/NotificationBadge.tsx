@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { getNotifications } from '@/lib/notifications';
+import { supabase } from '@/lib/supabase';
 
 interface NotificationBadgeProps {
   size?: number;
@@ -10,22 +11,38 @@ export const NotificationBadge = ({ size = 20 }: NotificationBadgeProps) => {
   const [unreadCount, setUnreadCount] = useState(0);
   
   useEffect(() => {
+    let isMounted = true;
+    let interval: NodeJS.Timeout;
+    
     const fetchUnreadCount = async () => {
       try {
+        // Check if user is authenticated before fetching
+        const { data } = await supabase.auth.getSession();
+        if (!data.session) {
+          // User is not authenticated, don't try to fetch
+          return;
+        }
+        
         const notifications = await getNotifications();
-        const unread = notifications.filter(n => !n.read).length;
-        setUnreadCount(unread);
+        if (isMounted) {
+          const unread = notifications.filter(n => !n.read).length;
+          setUnreadCount(unread);
+        }
       } catch (error) {
         console.error('Error fetching notification count:', error);
       }
     };
     
+    // Initial fetch
     fetchUnreadCount();
     
-    // You could add a subscription or polling here to update in real-time
-    const interval = setInterval(fetchUnreadCount, 60000); // Update every minute
+    // Set up polling
+    interval = setInterval(fetchUnreadCount, 60000); // Update every minute
     
-    return () => clearInterval(interval);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
   
   if (unreadCount === 0) {

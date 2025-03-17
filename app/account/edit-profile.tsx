@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
-import { getProfile, updateProfile } from '@/lib/auth';
+import { getProfile, updateProfile, requestAccountDeletion } from '@/lib/auth';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 
@@ -11,6 +11,7 @@ export default function EditProfileScreen() {
   const [email, setEmail] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{
     fullName?: string;
   }>({});
@@ -77,6 +78,51 @@ export default function EditProfileScreen() {
     }
   };
 
+  const handleAccountDeletion = async () => {
+    try {
+      setIsDeleting(true);
+      setError(null);
+
+      // Use the centralized function from auth.ts
+      await requestAccountDeletion();
+
+      Alert.alert(
+        "Usunięcie konta zaplanowane",
+        "Twoje konto zostanie usunięte za 14 dni. Możesz anulować ten proces, logując się ponownie przed upływem tego terminu.",
+        [
+          { 
+            text: "OK", 
+            onPress: async () => {
+              try {
+                // Sign the user out
+                await supabase.auth.signOut();
+                // Redirect to authentication screen or main screen
+                router.replace('/');
+              } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to sign out');
+              }
+            } 
+          }
+        ]
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during account deletion request');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Usuń konto",
+      "Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna i wszystkie Twoje dane zostaną usunięte po 14 dniach.",
+      [
+        { text: "Anuluj", style: "cancel" },
+        { text: "Usuń konto", style: "destructive", onPress: handleAccountDeletion }
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -126,6 +172,23 @@ export default function EditProfileScreen() {
             <Text style={styles.emailText}>{email}</Text>
           </View>
           <Text style={styles.helperText}>Zmiana adresu email jest niemożliwa</Text>
+        </View>
+      </View>
+
+      <View style={styles.dangerZone}>
+        <Text style={styles.dangerZoneTitle}>Niebezpieczna strefa</Text>
+        <View style={styles.deleteContainer}>
+          <Pressable
+            onPress={handleDeleteAccount}
+            disabled={isDeleting}
+            style={[styles.deleteButton, isDeleting && styles.deleteButtonDisabled]}>
+            <Text style={styles.deleteButtonText}>
+              {isDeleting ? 'Usuwanie...' : 'Usuń konto'}
+            </Text>
+          </Pressable>
+          <Text style={styles.deleteDescription}>
+            To spowoduje nieodwracalne usunięcie Twojego konta i wszystkich danych po 14 dniach. \n Możesz anulować ten proces, logując się ponownie przed upływem tego terminu.
+          </Text>
         </View>
       </View>
     </View>
@@ -224,5 +287,42 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#F44336',
     textAlign: 'center',
+  },
+  dangerZone: {
+    marginTop: 20,
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+  },
+  dangerZoneTitle: {
+    color: '#F44336',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  deleteContainer: {
+    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+    borderRadius: 8,
+    padding: 15,
+  },
+  deleteButton: {
+    backgroundColor: '#F44336',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  deleteButtonDisabled: {
+    opacity: 0.7,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  deleteDescription: {
+    color: '#999',
+    fontSize: 14,
+    lineHeight: 20,
   },
 });
