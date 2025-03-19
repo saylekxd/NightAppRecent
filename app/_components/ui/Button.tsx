@@ -98,6 +98,9 @@ export const Button = ({
   );
 };
 
+// Add default export
+export default Button;
+
 const styles = StyleSheet.create({
   button: {
     borderRadius: 8,

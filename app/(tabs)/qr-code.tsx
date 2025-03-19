@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { getActiveQRCode, QRCode as QRCodeType } from '@/lib/points';
 import { Ionicons } from '@expo/vector-icons';
-import { QRCodeSkeleton } from '@/app/components/SkeletonLoader';
+import { QRCodeSkeleton } from '@/app/_components/ui/SkeletonLoader';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const QR_SIZE = SCREEN_WIDTH * 0.6;

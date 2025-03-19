@@ -76,4 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
-}); 
+});
+
+export default NotificationBadge; 

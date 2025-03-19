@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { getMenuItems, MenuItem } from '@/lib/menu';
-import { MenuSkeleton } from '@/app/components/MenuSkeleton';
+import { MenuSkeleton } from '@/app/_components/ui/MenuSkeleton';
 
 export default function MenuScreen() {
   const [activeTab, setActiveTab] = useState<'Drinki' | 'Shoty'>('Drinki');

@@ -23,6 +23,11 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6743415548",
+        "companyName": "SWT Labs"
+      }
+    }
   }
 }

@@ -5,10 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { getAdminStats, checkAdminStatus } from '@/lib/admin';
-import { DashboardSkeleton, CardSkeleton } from '@/app/components/SkeletonLoader';
+import { DashboardSkeleton, CardSkeleton } from '@/app/_components/ui/SkeletonLoader';
 import { Review } from '@/components/Review';
 import { getReviewStats } from '@/lib/reviews';
-import { PromotionPhotos } from '@/app/components/PromotionPhotos';
+import { PromotionPhotos } from '@/app/_components/ui/PromotionPhotos';
 
 interface AdminStats {
   visits_count: number;

@@ -6,8 +6,8 @@ import { getUpcomingEvents, Event } from '@/lib/events';
 import { getTransactionHistory, Transaction } from '@/lib/points';
 import { supabase } from '@/lib/supabase';
 import { getUserRank, getPointsToNextRank, Rank, ranks } from '@/lib/ranks';
-import { Header, PointsCard, CommunityPosts, Events, Activities } from './home/components';
-import { LoadingAnimation } from '@/app/components/LoadingAnimation';
+import { Header, PointsCard, CommunityPosts, Events, Activities } from '@/app/_components/home';
+import { LoadingAnimation } from '@/app/_components/LoadingAnimation';
 
 interface CommunityPost {
   id: string;

@@ -339,4 +339,6 @@ const styles = StyleSheet.create({
     color: '#999',
     fontSize: 16,
   },
-}); 
+});
+
+export default PromotionPhotos; 

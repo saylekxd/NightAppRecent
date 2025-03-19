@@ -4,9 +4,9 @@ import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { signUp, SignUpData, signUpSchema } from '@/lib/auth';
 import { ZodError } from 'zod';
-import { ErrorMessage } from '@/app/components/ErrorMessage';
-import { FormInput } from '@/app/components/FormInput';
-import { Button } from '@/app/components/Button';
+import { ErrorMessage } from '@/app/_components/ui/ErrorMessage';
+import { FormInput } from '@/app/_components/ui/FormInput';
+import { Button } from '@/app/_components/ui/Button';
 import { images } from '@/assets';
 
 export default function SignUpScreen() {

@@ -281,6 +281,8 @@ export function DashboardSkeleton() {
   );
 }
 
+export default DashboardSkeleton;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -217,4 +217,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'right',
   },
-}); 
+});
+
+export default FormInput; 

@@ -253,4 +253,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: '500',
   },
-}); 
+});
+
+export default LoadingAnimation; 

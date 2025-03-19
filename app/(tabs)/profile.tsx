@@ -8,10 +8,10 @@ import { getProfileStats, ProfileStats } from '@/lib/profile';
 import { router } from 'expo-router';
 import { getUserRank, getPointsToNextRank, Rank } from '@/lib/ranks';
 import { getTransactionHistory, Transaction } from '@/lib/points';
-import { ProfileSkeleton } from '@/app/components/SkeletonLoader';
-import { NotificationBadge } from '@/app/components/NotificationBadge';
+import { ProfileSkeleton } from '@/app/_components/ui/SkeletonLoader';
+import { NotificationBadge } from '@/app/_components/ui/NotificationBadge';
 import { createSampleNotifications } from '@/lib/notifications';
-import { GalleryImagePicker } from '@/app/components/GalleryImagePicker';
+import { GalleryImagePicker } from '@/app/_components/ui/GalleryImagePicker';
 import * as Sentry from '@sentry/react-native';
 
 // Define a type for the profile data

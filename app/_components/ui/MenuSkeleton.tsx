@@ -104,4 +104,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     width: '30%',
   },
-}); 
+});
+
+export default MenuSkeleton; 

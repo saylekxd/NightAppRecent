@@ -102,4 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
-}); 
+});
+
+export default ErrorMessage; 

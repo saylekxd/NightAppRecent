@@ -173,4 +173,6 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 14,
   },
-}); 
+});
+
+export default Events; 

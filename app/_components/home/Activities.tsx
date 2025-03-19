@@ -88,6 +88,8 @@ export function Activities({ activities }: ActivitiesProps) {
   );
 }
 
+export default Activities;
+
 const styles = StyleSheet.create({
   section: {
     padding: 20,

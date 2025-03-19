@@ -381,4 +381,6 @@ const styles = StyleSheet.create({
   likedCount: {
     color: '#ff3b7f',
   },
-}); 
+});
+
+export default CommunityPosts; 

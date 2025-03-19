@@ -319,4 +319,6 @@ const styles = StyleSheet.create({
     color: '#FF3B30',
     textAlign: 'center',
   },
-}); 
+});
+
+export default GalleryImagePicker; 

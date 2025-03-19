@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getPointsBalance } from '@/lib/points';
 import { Reward, RewardRedemption, getAvailableRewards, redeemReward, getUserRedemptions } from '@/lib/rewards';
 import QRCode from 'react-native-qrcode-svg';
-import { RewardsSkeleton } from '@/app/components/SkeletonLoader';
+import { RewardsSkeleton } from '@/app/_components/ui/SkeletonLoader';
 
 export default function RewardsScreen() {
   const [points, setPoints] = useState(0);

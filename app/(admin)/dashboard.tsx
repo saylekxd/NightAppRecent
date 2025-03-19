@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getAdminStats } from '@/lib/admin';
-import { DashboardSkeleton } from '@/app/components/SkeletonLoader';
+import { DashboardSkeleton } from '@/app/_components/ui/SkeletonLoader';
 
 interface AdminStats {
   visits_count: number;
